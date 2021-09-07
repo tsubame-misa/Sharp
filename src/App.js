@@ -35,8 +35,6 @@ const App = () => {
     });
   }, []);
 
-  console.log(isSignedIn);
-
   return (
     <IonApp>
       <IonReactRouter>
