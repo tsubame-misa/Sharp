@@ -11,6 +11,8 @@ import {
 	IonCardSubtitle,
 	IonCardTitle,
 	IonCardContent,
+	IonAvatar,
+	IonItem,
 	useIonViewWillEnter,
 } from "@ionic/react";
 import "./Home.css";
@@ -119,12 +121,21 @@ const Home = ({ history }) => {
 						<div>
 							<IonCard>
 								<IonCardHeader>
+									<div className="avatar">
+										<IonAvatar>
+											<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+										</IonAvatar>
+									</div>
 									<IonCardTitle className="title">{item.name}</IonCardTitle>
 									<IonCardSubtitle className="sub-title">
 										{item.birthday}
 									</IonCardSubtitle>
 								</IonCardHeader>
-								<IonCardContent>{item.memo}</IonCardContent>
+								<IonCardContent>
+									<IonItem className="memo" color="light" lines="none">
+										{item.memo}
+									</IonItem>
+								</IonCardContent>
 							</IonCard>
 						</div>
 					);
