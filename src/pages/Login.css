@@ -1,0 +1,12 @@
+.title{
+    text-align: center;
+}
+
+.subtitle{
+    text-align:center;
+    font-size: 20px;
+}
+
+ion-button{
+    --border-radius: 0;
+}

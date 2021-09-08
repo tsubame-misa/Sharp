@@ -1,6 +1,8 @@
-import { IonContent, IonPage } from "@ionic/react";
+import { IonContent, IonPage,IonButton } from "@ionic/react";
 import firebase from "../firebase";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import icon from "../img/logo.png";
+import "./Login.css";
 
 const Login = () => {
   const uiConfig = {
@@ -12,7 +14,7 @@ const Login = () => {
     signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
   };
 
-  /*var provider = new firebase.auth.GoogleAuthProvider();
+  var provider = new firebase.auth.GoogleAuthProvider();
   const login = () => {
     firebase
       .auth()
@@ -36,17 +38,24 @@ const Login = () => {
         var credential = error.credential;
         // ...
       });
-  };*/
+  };
 
   return (
     <IonPage>
-      <IonContent>
-        Loginページ
-        {/*<IonButton onClick={() => login()}>Googleでログイン</IonButton>*/}
-        <StyledFirebaseAuth
-          uiConfig={uiConfig}
-          firebaseAuth={firebase.auth()}
-        />
+      <IonContent color="dark">
+        <div className="display-flex">
+          <img src={icon} className="title" alt=""></img>
+          <div className="subtitle">
+            <p>#AboutYou <br />#blank <br />#blank</p>
+            <div className="button">
+              <IonButton color="light" onClick={() => login()}>Sign in with Google</IonButton>
+            </div>
+          </div>
+          {/* <StyledFirebaseAuth
+            uiConfig={uiConfig}
+            firebaseAuth={firebase.auth()}
+          /> */}
+        </div>
       </IonContent>
     </IonPage>
   );
