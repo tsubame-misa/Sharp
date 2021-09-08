@@ -66,17 +66,20 @@ const Home = ({ history }) => {
   async function addImg() {
     let newImageUri;
     try {
-      const response = await fetch(icon);
-      const blob = await response.blob();
-      await firebase.storage().ref().child("image/sample.png").put(blob);
-      var ref = firebase.storage().ref().child("image/sample.png").put(blob);
+      /*const response = await fetch(icon);
+      const blob = await response.blob();*/
+      await firebase.storage().ref().child("image/sample.png").put(test);
+      var ref = firebase.storage().ref().child("image/sample.png").put(test);
       newImageUri = await ref.snapshot.ref.getDownloadURL();
-      console.log(newImageUri);
+      //console.log(newImageUri);
       setTest(newImageUri);
+      return newImageUri;
     } catch (error) {
       console.log(error);
     }
   }
+
+  console.log(test);
 
   const add = () => {
     // sampleデータの追加
@@ -133,6 +136,47 @@ const Home = ({ history }) => {
   };
 
   console.log(test);
+
+  function addPicture(e) {
+    console.log(e.target.value);
+    const reader = new window.FileReader();
+    reader.onload = (event) => {
+      console.log(event.target.result);
+      setTest(event.target.result);
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  }
+
+  console.log(test);
+
+  async function saveData() {
+    const newData = {
+      name: name,
+      birthday: selectedDate,
+      memo: text,
+      created: getDate(),
+      id: 5,
+      photo: await addImg(),
+    };
+    console.log(newData);
+
+    const allData = data.concat(newData);
+
+    firebase.auth().onAuthStateChanged((user) => {
+      const db = firebase.firestore();
+      db.collection("/users")
+        .doc("zQDXYTHzUTZIkrWiAgt4")
+        .update({ data: allData })
+        .then(() => {
+          console.log("Document successfully written!");
+          return 1;
+        })
+        .catch((error) => {
+          console.error("Error writing document: ", error);
+          return 0;
+        });
+    });
+  }
 
   return (
     <IonPage>
@@ -203,8 +247,19 @@ const Home = ({ history }) => {
         <IonModal isOpen={showModal} cssClass="my-custom-class">
           <div style={{ display: "flex" }}>
             <IonAvatar slot="start">
-              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+              <img src={test} />
             </IonAvatar>
+            <label htmlFor="filename">
+              　<span>Click</span>
+              <input
+                type="file"
+                size="16"
+                id="filename"
+                src={test}
+                onChange={addPicture}
+              />
+            </label>
+
             <IonInput
               value={name}
               placeholder="UserName"
@@ -228,7 +283,14 @@ const Home = ({ history }) => {
               onIonChange={(e) => setText(e.detail.value)}
             ></IonTextarea>
           </IonItem>
-          <IonButton onClick={() => setShowModal(false)}>Close Modal</IonButton>
+          <IonButton
+            onClick={async () => {
+              setShowModal(false);
+              saveData();
+            }}
+          >
+            Close Modal
+          </IonButton>
         </IonModal>
       </IonContent>
     </IonPage>
