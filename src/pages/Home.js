@@ -6,19 +6,24 @@ import {
   IonToolbar,
   IonButton,
   IonButtons,
+  IonCard,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonCardContent,
+  IonAvatar,
+  IonItem,
   IonFab,
   IonFabButton,
   IonIcon,
-  IonModal, 
+  IonModal,
   IonInput,
-  IonItem,
   IonTextarea,
-  IonAvatar, 
   IonDatetime,
   IonLabel,
   useIonViewWillEnter,
 } from "@ionic/react";
-import { addOutline,} from 'ionicons/icons';
+import { addOutline } from "ionicons/icons";
 import "./Home.css";
 import firebase from "../firebase";
 import { useState } from "react";
@@ -28,8 +33,7 @@ const Home = ({ history }) => {
   const [text, setText] = useState();
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedDate, setSelectedDate] = useState('2012-12-15T13:47:20.789');
- 
+  const [selectedDate, setSelectedDate] = useState("2012-12-15T13:47:20.789");
 
   useIonViewWillEnter(() => {
     //sampleデータの取得
@@ -125,35 +129,74 @@ const Home = ({ history }) => {
         </IonButton>*/}
 
         {/*リストの表示*/}
+        {data.map((item) => {
+          let year = item.birthday.slice(0, 4);
+          let month = item.birthday.slice(5, 7);
+          let day = item.birthday.slice(8, 10);
+
+          return (
+            <div>
+              <IonCard>
+                <IonCardHeader>
+                  <div className="avatar">
+                    <IonAvatar>
+                      <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+                    </IonAvatar>
+                  </div>
+                  <IonCardTitle className="title">{item.name}</IonCardTitle>
+                  <IonCardSubtitle className="sub-title">
+                    {year + "年" + month + "月" + day + "日"}
+                  </IonCardSubtitle>
+                </IonCardHeader>
+                　　　　　　
+                <IonCardContent>
+                  <IonItem className="memo" color="light" lines="none">
+                    {item.memo}
+                  </IonItem>
+                </IonCardContent>
+              </IonCard>
+            </div>
+          );
+        })}
 
         {/*右下のボタン*/}
         <IonFab vertical="bottom" horizontal="end" slot="fixed" id={"test"}>
-          <IonFabButton
-            color="primary"
-            onClick={() => setShowModal(true)}
-          >
+          <IonFabButton color="primary" onClick={() => setShowModal(true)}>
             <IonIcon icon={addOutline} size="20px" />
           </IonFabButton>
         </IonFab>
 
         {/*モーダル*/}
-        <IonModal isOpen={showModal} cssClass='my-custom-class'>
-          <div style={{display:"flex"}}>
+        <IonModal isOpen={showModal} cssClass="my-custom-class">
+          <div style={{ display: "flex" }}>
             <IonAvatar slot="start">
               <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
             </IonAvatar>
-            <IonInput value={name} placeholder="UserName" onIonChange={e => setName(e.detail.value)}></IonInput>
+            <IonInput
+              value={name}
+              placeholder="UserName"
+              onIonChange={(e) => setName(e.detail.value)}
+            ></IonInput>
           </div>
           <IonItem>
-          <IonLabel>生年月日</IonLabel>
-          <IonDatetime displayFormat="YYYY/MM/DD" min="1994-03-14" max="2012-12-09" value={selectedDate} onIonChange={e => setSelectedDate(e.detail.value)}></IonDatetime>
+            <IonLabel>生年月日</IonLabel>
+            <IonDatetime
+              displayFormat="YYYY/MM/DD"
+              min="1994-03-14"
+              max="2012-12-09"
+              value={selectedDate}
+              onIonChange={(e) => setSelectedDate(e.detail.value)}
+            ></IonDatetime>
           </IonItem>
           <IonItem>
-              <IonTextarea placeholder="Enter more information here..." value={text} onIonChange={e => setText(e.detail.value)}></IonTextarea>
+            <IonTextarea
+              placeholder="Enter more information here..."
+              value={text}
+              onIonChange={(e) => setText(e.detail.value)}
+            ></IonTextarea>
           </IonItem>
           <IonButton onClick={() => setShowModal(false)}>Close Modal</IonButton>
         </IonModal>
-
       </IonContent>
     </IonPage>
   );
