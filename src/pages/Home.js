@@ -1,52 +1,52 @@
 import {
-	IonContent,
-	IonHeader,
-	IonPage,
-	IonTitle,
-	IonToolbar,
-	IonButton,
-	IonButtons,
-	IonCard,
-	IonCardHeader,
-	IonCardSubtitle,
-	IonCardTitle,
-	IonCardContent,
-	IonAvatar,
-	IonItem,
-	useIonViewWillEnter,
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonButton,
+  IonButtons,
+  IonCard,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonCardContent,
+  IonAvatar,
+  IonItem,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import "./Home.css";
 import firebase from "../firebase";
 import { useState } from "react";
 
 const Home = ({ history }) => {
-	const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
 
-	useIonViewWillEnter(() => {
-		//sampleデータの取得
-		firebase.auth().onAuthStateChanged((user) => {
-			const db = firebase.firestore();
-			db.collection("/users")
-				.doc("zQDXYTHzUTZIkrWiAgt4")
-				.get()
-				.then((request) => {
-					setData(request.data().data);
-				});
-		});
-	});
+  useIonViewWillEnter(() => {
+    //sampleデータの取得
+    firebase.auth().onAuthStateChanged((user) => {
+      const db = firebase.firestore();
+      db.collection("/users")
+        .doc("zQDXYTHzUTZIkrWiAgt4")
+        .get()
+        .then((request) => {
+          setData(request.data().data);
+        });
+    });
+  });
 
-	const getDate = () => {
-		const date = new Date();
-		return date;
-	};
+  const getDate = () => {
+    const date = new Date();
+    return date;
+  };
 
-	function logout() {
-		firebase.auth().signOut();
-	}
+  function logout() {
+    firebase.auth().signOut();
+  }
 
-	const add = () => {
-		// sampleデータの追加
-		/*
+  const add = () => {
+    // sampleデータの追加
+    /*
     firebase.auth().onAuthStateChanged((user) => {
       const db = firebase.firestore();
       db.collection("/users")
@@ -92,22 +92,22 @@ const Home = ({ history }) => {
           return 0;
         });
     });*/
-	};
+  };
 
-	return (
-		<IonPage>
-			<IonHeader>
-				<IonToolbar>
-					<IonTitle>#Sharp</IonTitle>
-					<IonButtons slot="end">
-						<IonButton fill="outline" onClick={() => logout()}>
-							ログアウト
-						</IonButton>
-					</IonButtons>
-				</IonToolbar>
-			</IonHeader>
-			<IonContent>
-				{/*<IonButton
+  return (
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>#Sharp</IonTitle>
+          <IonButtons slot="end">
+            <IonButton fill="outline" onClick={() => logout()}>
+              ログアウト
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+        {/*<IonButton
           onClick={() => {
             add();
           }}
@@ -115,42 +115,43 @@ const Home = ({ history }) => {
           add
         </IonButton>*/}
 
-				{/*リストの表示*/}
-				{data.map((item) => {
-					let year = item.birthday.slice(0, 4);
-					let month = item.birthday.slice(5, 7);
-					let day = item.birthday.slice(8, 10);
+        {/*リストの表示*/}
+        {data.map((item) => {
+          let year = item.birthday.slice(0, 4);
+          let month = item.birthday.slice(5, 7);
+          let day = item.birthday.slice(8, 10);
 
-					return (
-						<div>
-							<IonCard>
-								<IonCardHeader>
-									<div className="avatar">
-										<IonAvatar>
-											<img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
-										</IonAvatar>
-									</div>
-									<IonCardTitle className="title">{item.name}</IonCardTitle>
-									<IonCardSubtitle className="sub-title">
-										{year + "年" + month + "月" + day + "日"}
-									</IonCardSubtitle>
-								</IonCardHeader>
-								<IonCardContent>
-									<IonItem className="memo" color="light" lines="none">
-										{item.memo}
-									</IonItem>
-								</IonCardContent>
-							</IonCard>
-						</div>
-					);
-				})}
+          return (
+            <div>
+              <IonCard>
+                <IonCardHeader>
+                  <div className="avatar">
+                    <IonAvatar>
+                      <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+                    </IonAvatar>
+                  </div>
+                  <IonCardTitle className="title">{item.name}</IonCardTitle>
+                  <IonCardSubtitle className="sub-title">
+                    {year + "年" + month + "月" + day + "日"}
+                  </IonCardSubtitle>
+                </IonCardHeader>
+                　　　　　　
+                <IonCardContent>
+                  <IonItem className="memo" color="light" lines="none">
+                    {item.memo}
+                  </IonItem>
+                </IonCardContent>
+              </IonCard>
+            </div>
+          );
+        })}
 
-				{/*右下のボタン*/}
+        {/*右下のボタン*/}
 
-				{/*モーダル*/}
-			</IonContent>
-		</IonPage>
-	);
+        {/*モーダル*/}
+      </IonContent>
+    </IonPage>
+  );
 };
 
 export default Home;
