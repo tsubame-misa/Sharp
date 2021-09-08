@@ -117,6 +117,10 @@ const Home = ({ history }) => {
 
 				{/*リストの表示*/}
 				{data.map((item) => {
+					let year = item.birthday.slice(0, 4);
+					let month = item.birthday.slice(5, 7);
+					let day = item.birthday.slice(8, 10);
+
 					return (
 						<div>
 							<IonCard>
@@ -128,7 +132,7 @@ const Home = ({ history }) => {
 									</div>
 									<IonCardTitle className="title">{item.name}</IonCardTitle>
 									<IonCardSubtitle className="sub-title">
-										{item.birthday}
+										{year + "年" + month + "月" + day + "日"}
 									</IonCardSubtitle>
 								</IonCardHeader>
 								<IonCardContent>
