@@ -27,13 +27,17 @@ import { addOutline } from "ionicons/icons";
 import "./Home.css";
 import firebase from "../firebase";
 import { useState } from "react";
+import Mountain from "./mountains.png";
+import icon from "./icon.png";
 
 const Home = ({ history }) => {
-  const [name, setName] = useState();
-  const [text, setText] = useState();
   const [data, setData] = useState([]);
+  const [img, setImg] = useState(null);
+  const [test, setTest] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState("2012-12-15T13:47:20.789");
+  const [name, setName] = useState(null);
+  const [text, setText] = useState(null);
 
   useIonViewWillEnter(() => {
     //sampleデータの取得
@@ -48,6 +52,8 @@ const Home = ({ history }) => {
     });
   });
 
+  console.log(img);
+
   const getDate = () => {
     const date = new Date();
     return date;
@@ -57,9 +63,24 @@ const Home = ({ history }) => {
     firebase.auth().signOut();
   }
 
+  async function addImg() {
+    let newImageUri;
+    try {
+      const response = await fetch(icon);
+      const blob = await response.blob();
+      await firebase.storage().ref().child("image/sample.png").put(blob);
+      var ref = firebase.storage().ref().child("image/sample.png").put(blob);
+      newImageUri = await ref.snapshot.ref.getDownloadURL();
+      console.log(newImageUri);
+      setTest(newImageUri);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const add = () => {
     // sampleデータの追加
-    /*
+
     firebase.auth().onAuthStateChanged((user) => {
       const db = firebase.firestore();
       db.collection("/users")
@@ -71,6 +92,7 @@ const Home = ({ history }) => {
               created: getDate(),
               id: 1,
               photo: "",
+              birthday: "2000-08-05",
               memo: "#sample#hogehoge#tsubame",
             },
             {
@@ -78,6 +100,7 @@ const Home = ({ history }) => {
               created: getDate() + 10000,
               id: 2,
               photo: "",
+              birthday: "2000-09-05",
               memo: "#sample#numakei",
             },
             {
@@ -85,6 +108,7 @@ const Home = ({ history }) => {
               created: getDate() + 30000,
               id: 3,
               photo: "",
+              birthday: "2000-09-09",
               memo: "#sample#sashimi",
             },
             {
@@ -92,6 +116,7 @@ const Home = ({ history }) => {
               created: getDate() + 50000,
               id: 4,
               photo: "",
+              birthday: "1999-04-18",
               memo: "#sample#ruuu",
             },
           ],
@@ -104,8 +129,10 @@ const Home = ({ history }) => {
           console.error("Error writing document: ", error);
           return 0;
         });
-    });*/
+    });
   };
+
+  console.log(test);
 
   return (
     <IonPage>
@@ -120,13 +147,21 @@ const Home = ({ history }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {/*<IonButton
+        <IonButton
+          onClick={() => {
+            addImg();
+          }}
+        >
+          add
+        </IonButton>
+        <IonButton
           onClick={() => {
             add();
           }}
         >
-          add
-        </IonButton>*/}
+          addDB
+        </IonButton>
+        {test && <img src={test} />}
 
         {/*リストの表示*/}
         {data.map((item) => {
@@ -135,27 +170,25 @@ const Home = ({ history }) => {
           let day = item.birthday.slice(8, 10);
 
           return (
-            <div>
-              <IonCard>
-                <IonCardHeader>
-                  <div className="avatar">
-                    <IonAvatar>
-                      <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
-                    </IonAvatar>
-                  </div>
-                  <IonCardTitle className="title">{item.name}</IonCardTitle>
-                  <IonCardSubtitle className="sub-title">
-                    {year + "年" + month + "月" + day + "日"}
-                  </IonCardSubtitle>
-                </IonCardHeader>
-                　　　　　　
-                <IonCardContent>
-                  <IonItem className="memo" color="light" lines="none">
-                    {item.memo}
-                  </IonItem>
-                </IonCardContent>
-              </IonCard>
-            </div>
+            <IonCard key={item.id}>
+              <IonCardHeader>
+                <div className="avatar">
+                  <IonAvatar>
+                    <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+                  </IonAvatar>
+                </div>
+                <IonCardTitle className="title">{item.name}</IonCardTitle>
+                <IonCardSubtitle className="sub-title">
+                  {year + "年" + month + "月" + day + "日"}
+                </IonCardSubtitle>
+              </IonCardHeader>
+              　　　　　　
+              <IonCardContent>
+                <IonItem className="memo" color="light" lines="none">
+                  {item.memo}
+                </IonItem>
+              </IonCardContent>
+            </IonCard>
           );
         })}
 
