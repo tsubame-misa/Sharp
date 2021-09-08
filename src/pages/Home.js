@@ -107,6 +107,12 @@ const Home = ({ history }) => {
         >
           add
         </IonButton>*/}
+
+        {/*リストの表示*/}
+
+        {/*右下のボタン*/}
+
+        {/*モーダル*/}
       </IonContent>
     </IonPage>
   );
