@@ -22,6 +22,8 @@ import {
   IonDatetime,
   IonLabel,
   useIonViewWillEnter,
+  IonPopover,
+  IonList,
 } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
 import "./Home.css";
@@ -36,6 +38,11 @@ const Home = ({ history }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [name, setName] = useState(null);
   const [text, setText] = useState(null);
+  const [ID, setID] = useState(null);
+  const [popoverState, setShowPopover] = useState({
+    showPopover: false,
+    event: undefined,
+  });
 
   useIonViewWillEnter(() => {
     //sampleデータの取得
@@ -64,6 +71,9 @@ const Home = ({ history }) => {
   }
 
   async function addImg() {
+    if (img === null) {
+      return "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y";
+    }
     let newImageUri;
     try {
       const response = await fetch(img);
@@ -161,11 +171,7 @@ const Home = ({ history }) => {
         .update({ data: allData })
         .then(() => {
           console.log("Document successfully written!");
-          setName(null);
-          setImg(null);
-          setImgName(null);
-          setText(null);
-          selectedDate(null);
+          deleteSetData();
         })
         .catch((error) => {
           console.error("Error writing document: ", error);
@@ -173,6 +179,76 @@ const Home = ({ history }) => {
     });
 
     getAllData();
+  }
+
+  async function updateData() {
+    const newData = {
+      name: name,
+      birthday: selectedDate,
+      memo: text,
+      created: getDate(),
+      id: ID === null ? new Date().getTime().toString() : ID,
+      photo: await addImg(),
+    };
+
+    const allData = data.map((item) => {
+      if (item.id === newData.id) {
+        newData.id = new Date().getTime().toString();
+        return newData;
+      } else {
+        return item;
+      }
+    });
+
+    firebase.auth().onAuthStateChanged((user) => {
+      const db = firebase.firestore();
+      db.collection("/users")
+        .doc("zQDXYTHzUTZIkrWiAgt4")
+        .update({ data: allData })
+        .then(() => {
+          console.log("Document successfully written!");
+          deleteSetData();
+        })
+        .catch((error) => {
+          console.error("Error writing document: ", error);
+        });
+    });
+
+    getAllData();
+  }
+
+  function deleteSetData() {
+    setName(null);
+    setImg(null);
+    setImgName(null);
+    setText(null);
+    setSelectedDate(null);
+    setID(null);
+  }
+
+  function addModalData(item) {
+    setName(item.name);
+    console.log(item);
+    if (item.phot !== null && item.photo !== "") {
+      setImg(item.photo);
+    } else {
+      setImg(
+        "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
+      );
+    }
+    setText(item.memo);
+    setSelectedDate(item.birthday);
+    setID(item.id);
+  }
+
+  function getDisplayDate(date) {
+    if (date == null) {
+      return "";
+    }
+    const year = date.slice(0, 4);
+    const month = date.slice(5, 7);
+    const day = date.slice(8, 10);
+    return year + "年" + month + "月" + day + "日";
   }
 
   return (
@@ -190,10 +266,6 @@ const Home = ({ history }) => {
       <IonContent>
         {/*リストの表示*/}
         {data.map((item) => {
-          let year = item.birthday.slice(0, 4);
-          let month = item.birthday.slice(5, 7);
-          let day = item.birthday.slice(8, 10);
-
           return (
             <IonCard key={item.id}>
               <IonCardHeader>
@@ -211,8 +283,18 @@ const Home = ({ history }) => {
                 </div>
                 <IonCardTitle className="title">{item.name}</IonCardTitle>
                 <IonCardSubtitle className="sub-title">
-                  {year + "年" + month + "月" + day + "日"}
+                  {getDisplayDate(item.birthday)}
                 </IonCardSubtitle>
+                <IonButton
+                  className="edit-button"
+                  onClick={(e) => {
+                    e.persist();
+                    addModalData(item);
+                    setShowPopover({ showPopover: true, event: e });
+                  }}
+                >
+                  edit
+                </IonButton>
               </IonCardHeader>
               　　　　　　
               <IonCardContent>
@@ -273,7 +355,9 @@ const Home = ({ history }) => {
           </IonItem>
           <IonButton
             onClick={async () => {
+              deleteSetData();
               setShowModal(false);
+              setShowPopover({ showPopover: false });
             }}
           >
             Close Modal
@@ -281,7 +365,8 @@ const Home = ({ history }) => {
           <IonButton
             onClick={async () => {
               setShowModal(false);
-              saveData();
+              popoverState.showPopover ? updateData() : saveData();
+              setShowPopover({ showPopover: false });
             }}
             //条件要検討
             disabled={name == null || name === ""}
@@ -290,6 +375,19 @@ const Home = ({ history }) => {
           </IonButton>
         </IonModal>
       </IonContent>
+      <IonPopover
+        cssClass="my-custom-class"
+        event={popoverState.event}
+        isOpen={popoverState.showPopover}
+        onDidDismiss={() =>
+          setShowPopover({ showPopover: false, event: undefined })
+        }
+      >
+        <IonList>
+          <IonItem onClick={() => setShowModal(true)}>編集</IonItem>
+          <IonItem>削除</IonItem>
+        </IonList>
+      </IonPopover>
     </IonPage>
   );
 };
