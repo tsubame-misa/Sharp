@@ -50,7 +50,7 @@ const Home = ({ history }) => {
     getAllData();
   });
 
-  const getAllData = () => {
+  async function getAllData() {
     firebase.auth().onAuthStateChanged((user) => {
       const db = firebase.firestore();
       db.collection("/users")
@@ -60,7 +60,7 @@ const Home = ({ history }) => {
           setData(request.data().data);
         });
     });
-  };
+  }
 
   const getDate = () => {
     const date = new Date();
@@ -139,6 +139,7 @@ const Home = ({ history }) => {
           console.error("Error writing document: ", error);
         });
     });
+    return 1;
   }
 
   async function updateData() {
@@ -174,8 +175,7 @@ const Home = ({ history }) => {
           console.error("Error writing document: ", error);
         });
     });
-
-    getAllData();
+    return 1;
   }
 
   function deleteSetData() {
@@ -213,7 +213,7 @@ const Home = ({ history }) => {
     return year + "年" + month + "月" + day + "日";
   }
 
-  function deleteProfile() {
+  async function deleteProfile() {
     const deletedData = data.filter((item) => item.id !== ID);
 
     firebase.auth().onAuthStateChanged((user) => {
@@ -241,8 +241,7 @@ const Home = ({ history }) => {
         // Uh-oh, an error occurred!
       });
 
-    setShowPopover({ showPopover: false });
-    getAllData();
+    return 1;
   }
 
   return (
@@ -359,8 +358,12 @@ const Home = ({ history }) => {
           <IonButton
             onClick={async () => {
               setShowModal(false);
-              popoverState.showPopover ? updateData() : saveData();
-              getAllData();
+              const save = popoverState.showPopover
+                ? await updateData()
+                : await saveData();
+              if (save) {
+                getAllData();
+              }
               setShowPopover({ showPopover: false });
             }}
             //条件要検討
@@ -380,7 +383,15 @@ const Home = ({ history }) => {
       >
         <IonList>
           <IonItem onClick={() => setShowModal(true)}>編集</IonItem>
-          <IonItem onClick={() => deleteProfile()}>削除</IonItem>
+          <IonItem
+            onClick={async () => {
+              await deleteProfile();
+              await getAllData();
+              setShowPopover({ showPopover: false });
+            }}
+          >
+            削除
+          </IonItem>
         </IonList>
       </IonPopover>
     </IonPage>
