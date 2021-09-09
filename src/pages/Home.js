@@ -34,6 +34,7 @@ const Home = ({ history }) => {
   const [data, setData] = useState([]);
   const [img, setImg] = useState(null);
   const [imgName, setImgName] = useState(null);
+  const [preImgName, setPreImgName] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [name, setName] = useState(null);
@@ -49,7 +50,7 @@ const Home = ({ history }) => {
     getAllData();
   });
 
-  const getAllData = () => {
+  async function getAllData() {
     firebase.auth().onAuthStateChanged((user) => {
       const db = firebase.firestore();
       db.collection("/users")
@@ -59,7 +60,7 @@ const Home = ({ history }) => {
           setData(request.data().data);
         });
     });
-  };
+  }
 
   const getDate = () => {
     const date = new Date();
@@ -76,9 +77,23 @@ const Home = ({ history }) => {
     }
     let newImageUri;
     try {
+      //TODO:画像の変更がない場合はパス
+
+      if (preImgName !== null) {
+        const desertRef = firebase.storage().ref().child(`image/${preImgName}`);
+        // Delete the file
+        desertRef
+          .delete()
+          .then(function () {
+            console.log("file deleted successfully");
+          })
+          .catch(function (error) {
+            // Uh-oh, an error occurred!
+          });
+      }
+
       const response = await fetch(img);
       const blob = await response.blob();
-      /*名前を変更しないと全部同じになる*/
       await firebase.storage().ref().child(`image/${imgName}`).put(blob);
       var ref = firebase.storage().ref().child(`image/${imgName}`).put(blob);
       newImageUri = await ref.snapshot.ref.getDownloadURL();
@@ -88,60 +103,6 @@ const Home = ({ history }) => {
       console.log(error);
     }
   }
-
-  /*const add = () => {
-    // sampleデータの追加
-
-    firebase.auth().onAuthStateChanged((user) => {
-      const db = firebase.firestore();
-      db.collection("/users")
-        .doc("zQDXYTHzUTZIkrWiAgt4")
-        .set({
-          data: [
-            {
-              name: "misato",
-              created: getDate(),
-              id: 1,
-              photo: "",
-              birthday: "2000-08-05",
-              memo: "#sample#hogehoge#tsubame",
-            },
-            {
-              name: "kei",
-              created: getDate() + 10000,
-              id: 2,
-              photo: "",
-              birthday: "2000-09-05",
-              memo: "#sample#numakei",
-            },
-            {
-              name: "saaya",
-              created: getDate() + 30000,
-              id: 3,
-              photo: "",
-              birthday: "2000-09-09",
-              memo: "#sample#sashimi",
-            },
-            {
-              name: "ayano",
-              created: getDate() + 50000,
-              id: 4,
-              photo: "",
-              birthday: "1999-04-18",
-              memo: "#sample#ruuu",
-            },
-          ],
-        })
-        .then(() => {
-          console.log("Document successfully written!");
-          return 1;
-        })
-        .catch((error) => {
-          console.error("Error writing document: ", error);
-          return 0;
-        });
-    });
-  };*/
 
   function addPicture(e) {
     const reader = new window.FileReader();
@@ -159,7 +120,8 @@ const Home = ({ history }) => {
       memo: text,
       created: getDate(),
       id: new Date().getTime().toString(),
-      photo: await addImg(),
+      icon_path: await addImg(),
+      icon_name: imgName,
     };
 
     const allData = data.concat(newData);
@@ -177,8 +139,7 @@ const Home = ({ history }) => {
           console.error("Error writing document: ", error);
         });
     });
-
-    getAllData();
+    return 1;
   }
 
   async function updateData() {
@@ -188,7 +149,8 @@ const Home = ({ history }) => {
       memo: text,
       created: getDate(),
       id: ID === null ? new Date().getTime().toString() : ID,
-      photo: await addImg(),
+      icon_path: await addImg(),
+      icon_name: imgName,
     };
 
     const allData = data.map((item) => {
@@ -213,8 +175,7 @@ const Home = ({ history }) => {
           console.error("Error writing document: ", error);
         });
     });
-
-    getAllData();
+    return 1;
   }
 
   function deleteSetData() {
@@ -228,9 +189,10 @@ const Home = ({ history }) => {
 
   function addModalData(item) {
     setName(item.name);
-    console.log(item);
-    if (item.phot !== null && item.photo !== "") {
-      setImg(item.photo);
+    if (item.icon_path !== null && item.icon_path !== "") {
+      setImg(item.icon_path);
+      setImgName(item.icon_name);
+      setPreImgName(item.icon_name);
     } else {
       setImg(
         "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
@@ -249,6 +211,37 @@ const Home = ({ history }) => {
     const month = date.slice(5, 7);
     const day = date.slice(8, 10);
     return year + "年" + month + "月" + day + "日";
+  }
+
+  async function deleteProfile() {
+    const deletedData = data.filter((item) => item.id !== ID);
+
+    firebase.auth().onAuthStateChanged((user) => {
+      const db = firebase.firestore();
+      db.collection("/users")
+        .doc("zQDXYTHzUTZIkrWiAgt4")
+        .update({ data: deletedData })
+        .then(() => {
+          console.log("Document successfully written!");
+        })
+        .catch((error) => {
+          console.error("Error writing document: ", error);
+        });
+    });
+
+    const desertRef = firebase.storage().ref().child(`image/${preImgName}`);
+    // Delete the file
+    desertRef
+      .delete()
+      .then(function () {
+        console.log("file deleted successfully");
+        deleteSetData();
+      })
+      .catch(function (error) {
+        // Uh-oh, an error occurred!
+      });
+
+    return 1;
   }
 
   return (
@@ -273,8 +266,8 @@ const Home = ({ history }) => {
                   <IonAvatar>
                     <img
                       src={
-                        item.photo !== ""
-                          ? item.photo
+                        item.icon_path !== ""
+                          ? item.icon_path
                           : "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
                       }
                       alt="icon"
@@ -365,7 +358,12 @@ const Home = ({ history }) => {
           <IonButton
             onClick={async () => {
               setShowModal(false);
-              popoverState.showPopover ? updateData() : saveData();
+              const save = popoverState.showPopover
+                ? await updateData()
+                : await saveData();
+              if (save) {
+                getAllData();
+              }
               setShowPopover({ showPopover: false });
             }}
             //条件要検討
@@ -385,7 +383,15 @@ const Home = ({ history }) => {
       >
         <IonList>
           <IonItem onClick={() => setShowModal(true)}>編集</IonItem>
-          <IonItem>削除</IonItem>
+          <IonItem
+            onClick={async () => {
+              await deleteProfile();
+              await getAllData();
+              setShowPopover({ showPopover: false });
+            }}
+          >
+            削除
+          </IonItem>
         </IonList>
       </IonPopover>
     </IonPage>
