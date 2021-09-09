@@ -21,6 +21,7 @@ import {
   IonTextarea,
   IonDatetime,
   IonLabel,
+  IonSearchbar,
   useIonViewWillEnter,
 } from "@ionic/react";
 import { addOutline } from "ionicons/icons";
@@ -34,6 +35,7 @@ const Home = ({ history }) => {
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState("2012-12-15T13:47:20.789");
+  const [searchText, setSearchText] = useState("");
 
   useIonViewWillEnter(() => {
     //sampleデータの取得
@@ -129,6 +131,20 @@ const Home = ({ history }) => {
         </IonButton>*/}
 
         {/*リストの表示*/}
+
+        <IonSearchbar
+          className="search"
+          value={searchText}
+          showCancelButton="focus"
+          placeholder="検索"
+          cancelButtonText="キャンセル"
+          /* onIonCancel={() => SearchData(false)}
+          onIonChange={(e) => {
+            setSearch(!search);
+            SearchData(true, e.detail.value);
+          }} */
+        ></IonSearchbar>
+
         {data.map((item) => {
           let year = item.birthday.slice(0, 4);
           let month = item.birthday.slice(5, 7);
