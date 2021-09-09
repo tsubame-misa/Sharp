@@ -51,15 +51,12 @@ const Home = ({ history }) => {
   });
 
   const getAllData = () => {
-    console.log("in getData");
     firebase.auth().onAuthStateChanged((user) => {
       const db = firebase.firestore();
       db.collection("/users")
         .doc("zQDXYTHzUTZIkrWiAgt4")
         .get()
         .then((request) => {
-          console.log("request data");
-          console.log(request.data().data);
           setData(request.data().data);
         });
     });
@@ -128,7 +125,6 @@ const Home = ({ history }) => {
     };
 
     const allData = data.concat(newData);
-    console.log("save", allData);
 
     firebase.auth().onAuthStateChanged((user) => {
       const db = firebase.firestore();
@@ -165,8 +161,6 @@ const Home = ({ history }) => {
       }
     });
 
-    console.log(allData);
-
     firebase.auth().onAuthStateChanged((user) => {
       const db = firebase.firestore();
       db.collection("/users")
@@ -194,7 +188,6 @@ const Home = ({ history }) => {
   }
 
   function addModalData(item) {
-    console.log(item);
     setName(item.name);
     if (item.icon_path !== null && item.icon_path !== "") {
       setImg(item.icon_path);
@@ -222,7 +215,6 @@ const Home = ({ history }) => {
 
   function deleteProfile() {
     const deletedData = data.filter((item) => item.id !== ID);
-    console.log("delete", deletedData);
 
     firebase.auth().onAuthStateChanged((user) => {
       const db = firebase.firestore();
