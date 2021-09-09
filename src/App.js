@@ -33,7 +33,7 @@ const App = () => {
     firebase.auth().onAuthStateChanged((user) => {
       setIsSignedIn(!!user);
     });
-  }, []);
+  }, [isSignedIn]);
 
   return (
     <IonApp>
