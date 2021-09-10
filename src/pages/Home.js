@@ -46,6 +46,7 @@ function getVisited() {
 }
 
 const Home = ({ history }) => {
+  const [allStorageData, setAllData] = useState([]);
   const [data, setData] = useState([]);
   const [img, setImg] = useState("");
   const [imgName, setImgName] = useState("");
@@ -63,6 +64,10 @@ const Home = ({ history }) => {
   const [userId, setUserId] = useState(null);
   const [firstLogined, setFirstLogined] = useState(getVisited());
   const [showAlert, setShowAlert] = useState(false);
+  const [search, setSearch] = useState(false);
+  const [searchData, setSearchData] = useState("");
+
+  console.log("searchData", searchData);
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -81,6 +86,7 @@ const Home = ({ history }) => {
           if (responce === undefined) {
             return;
           }
+          setAllData(responce.data);
           setData(responce.data);
         });
     });
@@ -223,6 +229,34 @@ const Home = ({ history }) => {
     clearState();
   }
 
+  function findWord(item, word) {
+    if (item) {
+      const find = item.indexOf(`${word}`);
+      if (find !== -1) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  }
+
+  async function SearchData(search, word) {
+    console.log("searchData 10");
+    setSearchText(word);
+    if (!search || word === "" || word === undefined) {
+      setData(allStorageData);
+      return;
+    }
+
+    const newData = allStorageData.filter((item) => findWord(item.memo, word));
+
+    if (newData.length > 0) {
+      setData(newData);
+      return;
+    }
+    setData([]);
+  }
+
   if (!firstLogined) {
     return <Guide modal={true} />;
   }
@@ -247,11 +281,11 @@ const Home = ({ history }) => {
           showCancelButton="focus"
           placeholder="検索"
           cancelButtonText="キャンセル"
-          /* onIonCancel={() => SearchData(false)}
+          onIonCancel={() => SearchData(false)}
           onIonChange={(e) => {
             setSearch(!search);
             SearchData(true, e.detail.value);
-          }} */
+          }}
         ></IonSearchbar>
 
         {data.map((item) => {
