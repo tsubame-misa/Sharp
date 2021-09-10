@@ -1,17 +1,30 @@
 .subtitle {
+  display: block;
+  text-align: center;
   font-size: 20px;
 }
 
-.loginTitle {
-  text-align: center;
-  padding-top: 130px;
-  position: relative;
-}
-
-.all {
+.image {
+  display: block;
   text-align: center;
 }
 
 ion-button {
   --border-radius: 0;
+}
+
+.hashtags {
+  line-height: 30px;
+}
+
+.loginpageAll {
+  padding-top: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+img.image {
+  width: 80%;
+  height: 80%;
 }

@@ -33,15 +33,16 @@ const Login = () => {
   return (
     <IonPage>
       <IonContent color="dark">
-        <div className="all">
-          <div className="loginTitle">
-            <img src={icon} alt="" width="80%" height="80%"></img>
+        <div className="loginpageAll">
+          <div className="image">
+            <img src={icon} width="80%" height="80%" alt=""></img>
           </div>
           <div className="subtitle">
-            <p>
-              #AboutYou <br />
-              #blank <br />
-              #blank
+            <p className="hashtags">
+              #About_You <br />
+              #Do_You_Remember
+              <br />
+              #What_Kind_Of_Person
             </p>
             <div className="button">
               <IonButton color="light" onClick={() => login()}>
@@ -49,6 +50,10 @@ const Login = () => {
               </IonButton>
             </div>
           </div>
+          {/* <StyledFirebaseAuth
+            uiConfig={uiConfig}
+            firebaseAuth={firebase.auth()}
+          /> */}
         </div>
       </IonContent>
     </IonPage>
