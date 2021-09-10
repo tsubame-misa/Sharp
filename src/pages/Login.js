@@ -43,16 +43,16 @@ const Login = () => {
   return (
     <IonPage>
       <IonContent color="dark">
-        <div className="display-flex">
+        <div className="loginpageAll">
           <div className="image">
-            <img src={icon} alt=""></img>
+            <img src={icon} width="80%" height="80%" alt=""></img>
           </div>
           <div className="subtitle">
-            <p>
-              #About you <br />
-              #Do you remember?
+            <p className="hashtags">
+              #About_You <br />
+              #Do_You_Remember
               <br />
-              #What kind of person
+              #What_Kind_Of_Person
             </p>
             <div className="button">
               <IonButton color="light" onClick={() => login()}>
