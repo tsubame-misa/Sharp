@@ -10,6 +10,7 @@ import {
 } from "@ionic/react";
 import "./Home.css";
 import firebase from "../firebase";
+import Guide from "./Guide";
 import { useState } from "react";
 
 const Home = ({ history }) => {
@@ -35,6 +36,18 @@ const Home = ({ history }) => {
 
   function logout() {
     firebase.auth().signOut();
+  }
+
+  function logined() {
+    if ("visited" in localStorage) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  if (logined() === false) {
+    return <Guide modal={true} />;
   }
 
   const add = () => {
