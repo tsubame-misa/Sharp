@@ -21,6 +21,7 @@ import {
   IonTextarea,
   IonDatetime,
   IonLabel,
+  IonSearchbar,
   useIonViewWillEnter,
   IonPopover,
   IonList,
@@ -43,6 +44,7 @@ const Home = ({ history }) => {
   const [imgName, setImgName] = useState("");
   const [preImgName, setPreImgName] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [searchText, setSearchText] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [name, setName] = useState(null);
   const [text, setText] = useState(null);
@@ -220,6 +222,20 @@ const Home = ({ history }) => {
       </IonHeader>
       <IonContent>
         {/*リストの表示*/}
+
+        <IonSearchbar
+          className="search"
+          value={searchText}
+          showCancelButton="focus"
+          placeholder="検索"
+          cancelButtonText="キャンセル"
+          /* onIonCancel={() => SearchData(false)}
+          onIonChange={(e) => {
+            setSearch(!search);
+            SearchData(true, e.detail.value);
+          }} */
+        ></IonSearchbar>
+
         {data.map((item) => {
           return (
             <IonCard key={item.id}>
