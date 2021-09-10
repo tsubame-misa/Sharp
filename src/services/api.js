@@ -18,7 +18,6 @@ export function updateData2DB(data, userId) {
   if (userId === null) {
     throw new Error("userId should be specified");
   }
-
   const db = firebase.firestore();
   return new Promise((resolve, reject) => {
     db.collection("users")
@@ -41,7 +40,6 @@ export function setData2DB(data, userId) {
   if (userId === null) {
     throw new Error("userId should be specified");
   }
-
   const db = firebase.firestore();
   return new Promise((resolve, reject) => {
     db.collection("users")

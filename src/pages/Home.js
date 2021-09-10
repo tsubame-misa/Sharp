@@ -97,22 +97,21 @@ const Home = ({ history }) => {
   }, []);
 
   function birthdayMember(data) {
-    console.log("birthdayMember 10");
-    console.log(data);
+    //("birthdayMember 10");
+    //console.log(data);
     //new Date().valueOf();
     const today = getDate();
     const year = today.getFullYear();
-    console.log(year);
+    //console.log(year);
     for (const item of data) {
       for (let i = -1; i <= 1; i++) {
         const birthday = new Date(item.birthday);
         const birthday2 = new Date();
-        console.log(birthday, typeof birthday);
         birthday2.setFullYear(today.getFullYear() + i);
         birthday2.setMonth(birthday.getMonth());
         birthday2.setDate(birthday.getDate());
-        console.log(birthday2, i);
-        console.log(i);
+        //console.log(birthday2, i);
+        //console.log(i);
       }
     }
   }
@@ -388,7 +387,9 @@ const Home = ({ history }) => {
                 <IonButton
                   onClick={async () => {
                     setShowModal(false);
-                    popoverState.showPopover ? updateData() : saveData();
+                    await (popoverState.showPopover
+                      ? updateData()
+                      : saveData());
                     const data = await getAllData(userId);
                     setData(data);
                     setAllData(data);
