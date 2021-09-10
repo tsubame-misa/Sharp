@@ -41,15 +41,11 @@ const App = () => {
       <IonReactRouter>
         {isSignedIn ? (
           <IonRouterOutlet>
-            <Route exact path="/home">
-              <Home />
-            </Route>
+            <Route exact path="/home" component={Home} />
             <Route exact path="/">
               <Redirect to="/home" />
             </Route>
-            <Route exact path="/setting/Guide">
-              <Guide />
-            </Route>
+            <Route exact path="/setting/Guide" component={Guide} />
           </IonRouterOutlet>
         ) : (
           <Login />

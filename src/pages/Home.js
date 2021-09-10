@@ -28,7 +28,12 @@ import {
   IonAlert,
   IonItemDivider,
 } from "@ionic/react";
-import { addOutline, cameraOutline, ellipsisHorizontal } from "ionicons/icons";
+import {
+  addOutline,
+  cameraOutline,
+  ellipsisHorizontal,
+  menuOutline,
+} from "ionicons/icons";
 import "./Home.css";
 import firebase from "../firebase";
 import Guide from "./Guide";
@@ -90,9 +95,14 @@ const Home = ({ history }) => {
           if (responce === undefined) {
             return;
           }
-          setAllData(responce.data);
-          setData(responce.data);
-          whoIsBirthdayMember(responce.data);
+          const data = responce.data;
+          const sortedData = [...data].sort((a, b) => {
+            return b.created - a.created;
+          });
+
+          setAllData(sortedData);
+          setData(sortedData);
+          whoIsBirthdayMember(sortedData);
         });
     });
   });
@@ -333,7 +343,7 @@ const Home = ({ history }) => {
               slot="icon-only"
               size="large"
               color="light"
-              icon={ellipsisHorizontal}
+              icon={menuOutline}
             ></IonIcon>
           </IonButton>
         </IonToolbar>
@@ -383,7 +393,6 @@ const Home = ({ history }) => {
               })}
             </IonList>
             <IonItemDivider color="medium" style={{ marginTop: "40px" }}>
-              {" "}
               メンバー
             </IonItemDivider>
           </div>
@@ -467,9 +476,12 @@ const Home = ({ history }) => {
                       ? updateData()
                       : saveData());
                     const data = await getAllData(userId);
-                    setData(data);
-                    setAllData(data);
-                    setshowPopover1({ showPopover1: false });
+                    const sortedData = [...data].sort((a, b) => {
+                      return b.created - a.created;
+                    });
+                    setData(sortedData);
+                    setAllData(sortedData);
+                    setshowPopover1({ showPopover: false });
                   }}
                   //条件要検討
                   disabled={name == null || name === ""}
@@ -532,13 +544,16 @@ const Home = ({ history }) => {
         }
       >
         <IonList>
-          <IonItem onClick={() => setShowModal(true)}>編集</IonItem>
+          <IonItem lines="full" onClick={() => setShowModal(true)}>
+            編集する
+          </IonItem>
           <IonItem
+            lines="none"
             onClick={async () => {
               setShowAlert(true);
             }}
           >
-            削除
+            削除する
           </IonItem>
           <IonAlert
             isOpen={showAlert}
@@ -559,8 +574,11 @@ const Home = ({ history }) => {
                   setshowPopover1({ showPopover1: false });
                   await deleteProfile();
                   const data = await getAllData(userId);
-                  setData(data);
-                  setAllData(data);
+                  const sortedData = [...data].sort((a, b) => {
+                    return b.created - a.created;
+                  });
+                  setData(sortedData);
+                  setAllData(sortedData);
                 },
               },
             ]}
@@ -576,10 +594,14 @@ const Home = ({ history }) => {
         }
       >
         <IonList>
-          <IonItem onClick={() => logout()}>ログアウト</IonItem>
+          <IonItem lines="full" onClick={() => logout()}>
+            ログアウト
+          </IonItem>
           <IonItem
+            lines="none"
             onClick={() => {
               history.push("/setting/Guide");
+              setshowPopover2({ showPopover2: false });
             }}
           >
             ガイド
