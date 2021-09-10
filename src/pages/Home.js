@@ -35,7 +35,7 @@ import {
   getAllData,
   setData2DB,
   updateData2DB,
-  uploadImg,
+  uploadImg2Storage,
 } from "../services/api";
 
 const Home = ({ history }) => {
@@ -103,7 +103,7 @@ const Home = ({ history }) => {
       }
       const response = await fetch(img);
       const blob = await response.blob();
-      const newImageUri = await uploadImg(
+      const newImageUri = await uploadImg2Storage(
         preImgName == null ? imgName : preImgName,
         blob
       );
@@ -140,6 +140,7 @@ const Home = ({ history }) => {
   }
 
   async function updateData() {
+    console.log("updateData 10");
     const newData = {
       name: name,
       birthday: selectedDate,
@@ -150,6 +151,8 @@ const Home = ({ history }) => {
       icon_name: imgName,
     };
 
+    console.log(newData);
+
     const allData = data.map((item) => {
       if (item.id === newData.id) {
         newData.id = new Date().getTime().toString();
@@ -158,8 +161,9 @@ const Home = ({ history }) => {
         return item;
       }
     });
-
+    console.log("updateData20");
     await updateData2DB(allData, userId);
+    console.log("updateData 30");
     clearState();
   }
 
