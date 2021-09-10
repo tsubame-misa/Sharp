@@ -65,9 +65,6 @@ const Home = ({ history }) => {
   const [firstLogined, setFirstLogined] = useState(getVisited());
   const [showAlert, setShowAlert] = useState(false);
   const [search, setSearch] = useState(false);
-  const [searchData, setSearchData] = useState("");
-
-  console.log("searchData", searchData);
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -230,18 +227,23 @@ const Home = ({ history }) => {
   }
 
   function findWord(item, word) {
-    if (item) {
-      const find = item.indexOf(`${word}`);
-      if (find !== -1) {
-        return 1;
-      } else {
-        return 0;
+    const words = word.split(" ").filter((w) => w !== "");
+    let cnt = 0;
+    for (const w of words) {
+      if (item) {
+        const find = item.indexOf(`${w}`);
+        if (find !== -1) {
+          cnt += 1;
+        }
       }
     }
+    if (cnt === words.length) {
+      return 1;
+    }
+    return 0;
   }
 
   async function SearchData(search, word) {
-    console.log("searchData 10");
     setSearchText(word);
     if (!search || word === "" || word === undefined) {
       setData(allStorageData);
@@ -360,6 +362,7 @@ const Home = ({ history }) => {
                     popoverState.showPopover ? updateData() : saveData();
                     const data = await getAllData(userId);
                     setData(data);
+                    setAllData(data);
                     setShowPopover({ showPopover: false });
                   }}
                   //条件要検討
@@ -458,6 +461,7 @@ const Home = ({ history }) => {
                   await deleteProfile();
                   const data = await getAllData(userId);
                   setData(data);
+                  setAllData(data);
                 },
               },
             ]}
