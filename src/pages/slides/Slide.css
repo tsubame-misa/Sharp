@@ -3,6 +3,13 @@
   font-size: 1.5rem;
   font-weight: bold;
 }
+
+.title-big {
+  font-size: 2.15rem;
+  font-weight: bold;
+}
+
 img.logo {
   width: 85%;
+  max-width: 400px;
 }

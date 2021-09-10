@@ -7,8 +7,8 @@ const Slide0 = () => {
       <div>
         <div className="logo"></div>
         <div className="position">
-          <h2 className="title">Welcome to #Sharp</h2>
-          <p>Sharpへようこそ</p>
+          <div className="title-big">Welcome to #Sharp</div>
+          <h2>#Sharpへようこそ</h2>
         </div>
       </div>
     </IonSlide>

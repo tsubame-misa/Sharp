@@ -32,6 +32,7 @@ const Slide4 = () => {
           onClick={() => {
             setVisited();
           }}
+          color="light"
         >
           はじめる
         </IonButton>

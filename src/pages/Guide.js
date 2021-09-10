@@ -33,9 +33,11 @@ const Guide = ({ modal, history }) => {
           style={{ height: "100%" }}
         >
           {modal ? <Slide0 /> : []}
+          <Slide0 />
           <Slide1 />
           <Slide2 />
           <Slide3 />
+          <Slide4 />
           {modal ? <Slide4 /> : []}
         </IonSlides>
       </IonContent>
