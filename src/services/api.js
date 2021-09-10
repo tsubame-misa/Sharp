@@ -50,7 +50,7 @@ export function setData2DB(data, userId) {
         data: data,
       })
       .then(() => {
-        console.log("Document set successfully written!");
+        console.info("Document set successfully written!");
         resolve();
       })
       .catch((error) => {
@@ -68,7 +68,7 @@ export function deleteStorageImg(name) {
     desertRef
       .delete()
       .then(function () {
-        console.log("file deleted successfully");
+        console.info("file deleted successfully");
         resolve();
       })
       .catch(function (error) {

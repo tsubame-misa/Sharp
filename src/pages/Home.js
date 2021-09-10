@@ -140,7 +140,6 @@ const Home = ({ history }) => {
   }
 
   async function updateData() {
-    console.log("updateData 10");
     const newData = {
       name: name,
       birthday: selectedDate,
@@ -151,8 +150,6 @@ const Home = ({ history }) => {
       icon_name: imgName,
     };
 
-    console.log(newData);
-
     const allData = data.map((item) => {
       if (item.id === newData.id) {
         newData.id = new Date().getTime().toString();
@@ -161,9 +158,7 @@ const Home = ({ history }) => {
         return item;
       }
     });
-    console.log("updateData20");
     await updateData2DB(allData, userId);
-    console.log("updateData 30");
     clearState();
   }
 
