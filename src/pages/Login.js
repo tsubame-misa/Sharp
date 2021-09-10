@@ -49,9 +49,10 @@ const Login = () => {
           </div>
           <div className="subtitle">
             <p>
-              #AboutYou <br />
-              #blank <br />
-              #blank
+              #About you <br />
+              #Do you remember?
+              <br />
+              #What kind of person
             </p>
             <div className="button">
               <IonButton color="light" onClick={() => login()}>
