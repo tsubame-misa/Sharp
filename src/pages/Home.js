@@ -229,7 +229,6 @@ const Home = ({ history }) => {
     clearState();
   }
 
-  console.log("firstLogined", firstLogined);
   if (!firstLogined) {
     return <Guide modal={true} />;
   }
@@ -323,7 +322,7 @@ const Home = ({ history }) => {
                     setShowPopover({ showPopover: false });
                   }}
                 >
-                  Cancel
+                  戻る
                 </IonButton>
               </IonButtons>
               <IonButtons slot="end">
@@ -338,7 +337,7 @@ const Home = ({ history }) => {
                   //条件要検討
                   disabled={name == null || name === ""}
                 >
-                  Save
+                  保存
                 </IonButton>
               </IonButtons>
             </IonToolbar>

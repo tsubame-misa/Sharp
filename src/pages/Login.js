@@ -1,19 +1,9 @@
 import { IonContent, IonPage, IonButton } from "@ionic/react";
 import firebase from "../firebase";
-import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import icon from "../img/logo2.png";
 import "./Login.css";
 
 const Login = () => {
-  const uiConfig = {
-    // Popup signin flow rather than redirect flow.
-    signInFlow: "popup",
-    // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-    signInSuccessUrl: "/home",
-    // We will display Google and Facebook as auth providers.
-    signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
-  };
-
   var provider = new firebase.auth.GoogleAuthProvider();
   const login = () => {
     firebase
