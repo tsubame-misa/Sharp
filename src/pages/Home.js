@@ -25,6 +25,7 @@ import {
   useIonViewWillEnter,
   IonPopover,
   IonList,
+  IonAlert,
 } from "@ionic/react";
 import { addOutline, cameraOutline } from "ionicons/icons";
 import "./Home.css";
@@ -61,6 +62,7 @@ const Home = ({ history }) => {
   });
   const [userId, setUserId] = useState(null);
   const [firstLogined, setFirstLogined] = useState(getVisited());
+  const [showAlert, setShowAlert] = useState(false);
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -397,14 +399,35 @@ const Home = ({ history }) => {
           <IonItem onClick={() => setShowModal(true)}>編集</IonItem>
           <IonItem
             onClick={async () => {
-              await deleteProfile();
-              const data = await getAllData(userId);
-              setData(data);
-              setShowPopover({ showPopover: false });
+              setShowAlert(true);
             }}
           >
             削除
           </IonItem>
+          <IonAlert
+            isOpen={showAlert}
+            onDidDismiss={() => setShowAlert(false)}
+            cssClass="my-custom-class"
+            header={"プロフィールの削除"}
+            message={"削除しますか?"}
+            buttons={[
+              {
+                text: "キャンセル",
+                handler: () => {
+                  setShowPopover({ showPopover: false });
+                },
+              },
+              {
+                text: "削除",
+                handler: async () => {
+                  setShowPopover({ showPopover: false });
+                  await deleteProfile();
+                  const data = await getAllData(userId);
+                  setData(data);
+                },
+              },
+            ]}
+          />
         </IonList>
       </IonPopover>
     </IonPage>
