@@ -26,6 +26,7 @@ import {
   IonPopover,
   IonList,
   IonAlert,
+  IonItemDivider,
 } from "@ionic/react";
 import { addOutline, cameraOutline, ellipsisHorizontal } from "ionicons/icons";
 import "./Home.css";
@@ -128,7 +129,6 @@ const Home = ({ history }) => {
       }
     }
 
-    console.log(menber);
     setBirthdayMembser(menber);
   }
 
@@ -252,6 +252,16 @@ const Home = ({ history }) => {
     return year + "年" + month + "月" + day + "日";
   }
 
+  function getBirthdayListDate(date) {
+    if (date == null) {
+      return "";
+    }
+
+    const month = date.slice(5, 7);
+    const day = date.slice(8, 10);
+    return month + "月" + day + "日";
+  }
+
   async function deleteProfile() {
     const deletedData = data.filter((item) => item.id !== ID);
     await updateData2DB(deletedData, userId);
@@ -322,16 +332,47 @@ const Home = ({ history }) => {
           placeholder="検索"
           cancelButtonText="キャンセル"
           onIonCancel={() => SearchData(false)}
-          /*onIonChange={(e) => {
-            setSearch(!search);
-            SearchData(true, e.detail.value);
-          }}*/
           onIonChange={(e) => {
             setSearchText(e.target.value);
             setSearch(!search);
             SearchData(true, e.detail.value);
           }}
         ></IonSearchbar>
+
+        {birthdayMember.length !== 0 && (
+          <div>
+            <IonList>
+              <IonItemDivider color="medium">誕生日</IonItemDivider>
+              {birthdayMember.map((item) => {
+                return (
+                  <div>
+                    {/*TODO:ダブった時にヘッダーが一つになるように */}
+                    <IonItemDivider color="light">
+                      {getBirthdayListDate(item.birthday)}
+                    </IonItemDivider>
+                    <IonItem lines="full">
+                      <IonAvatar slot="start">
+                        <img
+                          src={
+                            item.icon_path !== ""
+                              ? item.icon_path
+                              : avatar_first
+                          }
+                          alt="icon birthday"
+                        />
+                      </IonAvatar>
+                      {item.name}
+                    </IonItem>
+                  </div>
+                );
+              })}
+            </IonList>
+            <IonItemDivider color="medium" style={{ marginTop: "40px" }}>
+              {" "}
+              メンバー
+            </IonItemDivider>
+          </div>
+        )}
 
         {data.map((item) => {
           return (
