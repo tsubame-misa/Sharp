@@ -30,7 +30,7 @@
   float: left;
 }
 
-img {
+img.avatar {
   width: 50px;
   height: 50px;
 }

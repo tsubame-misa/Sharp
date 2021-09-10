@@ -33,9 +33,9 @@ const Login = () => {
   return (
     <IonPage>
       <IonContent color="dark">
-        <div className="display-flex">
-          <div className="image">
-            <img src={icon} alt=""></img>
+        <div className="all">
+          <div className="loginTitle">
+            <img src={icon} alt="" width="80%" height="80%"></img>
           </div>
           <div className="subtitle">
             <p>
@@ -49,10 +49,6 @@ const Login = () => {
               </IonButton>
             </div>
           </div>
-          {/* <StyledFirebaseAuth
-            uiConfig={uiConfig}
-            firebaseAuth={firebase.auth()}
-          /> */}
         </div>
       </IonContent>
     </IonPage>
