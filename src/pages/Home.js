@@ -224,8 +224,8 @@ const Home = ({ history }) => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>#Sharp</IonTitle>
+        <IonToolbar className="Header">
+          <IonTitle className="ionTitle">#Sharp</IonTitle>
           <IonButtons slot="end">
             <IonButton fill="outline" onClick={() => logout()}>
               ログアウト
@@ -235,7 +235,6 @@ const Home = ({ history }) => {
       </IonHeader>
       <IonContent>
         {/*リストの表示*/}
-
         <IonSearchbar
           className="search"
           value={searchText}
@@ -251,8 +250,8 @@ const Home = ({ history }) => {
 
         {data.map((item) => {
           return (
-            <IonCard key={item.id}>
-              <IonCardHeader>
+            <IonCard className="card" key={item.id}>
+              <IonCardHeader className="cardHeader">
                 <div className="avatar">
                   <IonAvatar>
                     <img
@@ -281,8 +280,8 @@ const Home = ({ history }) => {
                   </IonButton>
                 </IonCardSubtitle>
               </IonCardHeader>
-              　　　　　　
-              <IonCardContent>
+              　　
+              <IonCardContent className="cardContent">
                 <IonItem className="memo" color="light" lines="none">
                   {item.memo}
                 </IonItem>
@@ -293,7 +292,7 @@ const Home = ({ history }) => {
 
         {/*右下のボタン*/}
         <IonFab vertical="bottom" horizontal="end" slot="fixed" id={"test"}>
-          <IonFabButton color="primary" onClick={() => setShowModal(true)}>
+          <IonFabButton color="dark" onClick={() => setShowModal(true)}>
             <IonIcon icon={addOutline} size="20px" />
           </IonFabButton>
         </IonFab>
