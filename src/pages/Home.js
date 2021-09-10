@@ -58,8 +58,12 @@ const Home = ({ history }) => {
   const [name, setName] = useState(null);
   const [text, setText] = useState(null);
   const [ID, setID] = useState(null);
-  const [popoverState, setShowPopover] = useState({
-    showPopover: false,
+  const [popoverState1, setshowPopover1] = useState({
+    showPopover1: false,
+    event: undefined,
+  });
+  const [popoverState2, setshowPopover2] = useState({
+    showPopover2: false,
     event: undefined,
   });
   const [userId, setUserId] = useState(null);
@@ -306,11 +310,22 @@ const Home = ({ history }) => {
       <IonHeader>
         <IonToolbar className="Header">
           <IonTitle className="ionTitle">#Sharp</IonTitle>
-          <IonButtons slot="end">
-            <IonButton fill="outline" onClick={() => logout()}>
-              ログアウト
-            </IonButton>
-          </IonButtons>
+          <IonButton
+            className="mainSet-button"
+            color="white"
+            slot="end"
+            onClick={(e) => {
+              e.persist();
+              setshowPopover2({ showPopover2: true, event: e });
+            }}
+          >
+            <IonIcon
+              slot="icon-only"
+              size="large"
+              color="light"
+              icon={ellipsisHorizontal}
+            ></IonIcon>
+          </IonButton>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -362,7 +377,7 @@ const Home = ({ history }) => {
                   onClick={(e) => {
                     e.persist();
                     addModalData(item);
-                    setShowPopover({ showPopover: true, event: e });
+                    setshowPopover1({ showPopover1: true, event: e });
                   }}
                 >
                   <IonIcon
@@ -397,7 +412,7 @@ const Home = ({ history }) => {
                   onClick={async () => {
                     clearState();
                     setShowModal(false);
-                    setShowPopover({ showPopover: false });
+                    setshowPopover1({ showPopover1: false });
                   }}
                 >
                   戻る
@@ -407,13 +422,13 @@ const Home = ({ history }) => {
                 <IonButton
                   onClick={async () => {
                     setShowModal(false);
-                    await (popoverState.showPopover
+                    await (popoverState1.showPopover1
                       ? updateData()
                       : saveData());
                     const data = await getAllData(userId);
                     setData(data);
                     setAllData(data);
-                    setShowPopover({ showPopover: false });
+                    setshowPopover1({ showPopover1: false });
                   }}
                   //条件要検討
                   disabled={name == null || name === ""}
@@ -469,10 +484,10 @@ const Home = ({ history }) => {
       </IonContent>
       <IonPopover
         cssClass="my-custom-class"
-        event={popoverState.event}
-        isOpen={popoverState.showPopover}
+        event={popoverState1.event}
+        isOpen={popoverState1.showPopover1}
         onDidDismiss={() =>
-          setShowPopover({ showPopover: false, event: undefined })
+          setshowPopover1({ showPopover1: false, event: undefined })
         }
       >
         <IonList>
@@ -494,13 +509,13 @@ const Home = ({ history }) => {
               {
                 text: "キャンセル",
                 handler: () => {
-                  setShowPopover({ showPopover: false });
+                  setshowPopover1({ showPopover1: false });
                 },
               },
               {
                 text: "削除",
                 handler: async () => {
-                  setShowPopover({ showPopover: false });
+                  setshowPopover1({ showPopover1: false });
                   await deleteProfile();
                   const data = await getAllData(userId);
                   setData(data);
@@ -509,6 +524,25 @@ const Home = ({ history }) => {
               },
             ]}
           />
+        </IonList>
+      </IonPopover>
+      <IonPopover
+        cssClass="my-custom-class"
+        event={popoverState2.event}
+        isOpen={popoverState2.showPopover2}
+        onDidDismiss={() =>
+          setshowPopover2({ showPopover2: false, event: undefined })
+        }
+      >
+        <IonList>
+          <IonItem onClick={() => logout()}>ログアウト</IonItem>
+          <IonItem
+            onClick={() => {
+              history.push("/setting/Guide");
+            }}
+          >
+            ガイド
+          </IonItem>
         </IonList>
       </IonPopover>
     </IonPage>

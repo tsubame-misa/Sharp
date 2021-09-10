@@ -9,6 +9,11 @@
 .ionTitle {
   font-size: 30px;
 }
+
+.mainSet_button {
+  padding: 0;
+  margin: 0;
+}
 .card {
   color: #f5f6f9;
 }
