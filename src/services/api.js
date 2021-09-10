@@ -61,7 +61,7 @@ export function setData2DB(data, userId) {
 }
 
 export function deleteStorageImg(name) {
-  console.trace();
+  //console.trace();
   const desertRef = firebase.storage().ref().child(`image/${name}`);
   // Delete the file
   return new Promise((resolve, reject) => {

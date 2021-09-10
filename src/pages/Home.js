@@ -96,17 +96,18 @@ const Home = ({ history }) => {
       if (imgName === preImgName) {
         return img;
       }
-
       //画像変更ありの場合
       if (preImgName !== "") {
-        await deleteStorageImg(img);
+        await deleteStorageImg(preImgName);
       }
       const response = await fetch(img);
       const blob = await response.blob();
+
       const newImageUri = await uploadImg2Storage(
-        preImgName == null ? imgName : preImgName,
+        preImgName === "" ? imgName : preImgName,
         blob
       );
+
       setImg(newImageUri);
       return newImageUri;
     } catch (error) {
