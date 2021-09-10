@@ -399,10 +399,6 @@ const Home = ({ history }) => {
           <IonItem onClick={() => setShowModal(true)}>編集</IonItem>
           <IonItem
             onClick={async () => {
-              //   await deleteProfile();
-              //   const data = await getAllData(userId);
-              //   setData(data);
-              //   setShowPopover({ showPopover: false });
               setShowAlert(true);
             }}
           >
@@ -418,13 +414,12 @@ const Home = ({ history }) => {
               "Cancel",
               {
                 text: "OK",
-                // handler={ async (d) => {
-                //   await deleteProfile();
-                //   const data = await getAllData(userId);
-                //   setData(data);
-                //   setShowPopover({ showPopover: false });
-                //   console.log("ok pressed");
-                // },
+                handler: async () => {
+                  setShowPopover({ showPopover: false });
+                  await deleteProfile();
+                  const data = await getAllData(userId);
+                  setData(data);
+                },
               },
             ]}
           />
