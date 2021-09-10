@@ -1,7 +1,7 @@
-import { IonContent, IonPage,IonButton } from "@ionic/react";
+import { IonContent, IonPage, IonButton } from "@ionic/react";
 import firebase from "../firebase";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-import icon from "../img/logo.png";
+import icon from "../img/logo2.png";
 import "./Login.css";
 
 const Login = () => {
@@ -44,11 +44,19 @@ const Login = () => {
     <IonPage>
       <IonContent color="dark">
         <div className="display-flex">
-          <img src={icon} className="title" alt=""></img>
+          <div className="image">
+            <img src={icon} alt=""></img>
+          </div>
           <div className="subtitle">
-            <p>#AboutYou <br />#blank <br />#blank</p>
+            <p>
+              #AboutYou <br />
+              #blank <br />
+              #blank
+            </p>
             <div className="button">
-              <IonButton color="light" onClick={() => login()}>Sign in with Google</IonButton>
+              <IonButton color="light" onClick={() => login()}>
+                Sign in with Google
+              </IonButton>
             </div>
           </div>
           {/* <StyledFirebaseAuth
