@@ -303,7 +303,7 @@ const Home = ({ history }) => {
             <IonToolbar class="Header">
               <IonTitle>追加</IonTitle>
               <IonButtons slot="start">
-                <IonButton 
+                <IonButton
                   onClick={async () => {
                     clearState();
                     setShowModal(false);
@@ -314,7 +314,7 @@ const Home = ({ history }) => {
                 </IonButton>
               </IonButtons>
               <IonButtons slot="end">
-                <IonButton 
+                <IonButton
                   onClick={async () => {
                     setShowModal(false);
                     const save = popoverState.showPopover
@@ -354,8 +354,8 @@ const Home = ({ history }) => {
                 onChange={addPicture}
               />
             </label>
-          </div> 
-          <IonItem>        
+          </div>
+          <IonItem>
             <IonLabel position="floating">名前</IonLabel>
             <IonInput
               value={name}
@@ -382,9 +382,7 @@ const Home = ({ history }) => {
               onIonChange={(e) => setText(e.detail.value)}
             ></IonTextarea>
           </IonItem>
-
         </IonModal>
-
       </IonContent>
       <IonPopover
         cssClass="my-custom-class"
