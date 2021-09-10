@@ -66,6 +66,7 @@ const Home = ({ history }) => {
   const [firstLogined, setFirstLogined] = useState(getVisited());
   const [showAlert, setShowAlert] = useState(false);
   const [search, setSearch] = useState(false);
+  const [birthdayMember, setBirthdayMembser] = useState([]);
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -86,7 +87,7 @@ const Home = ({ history }) => {
           }
           setAllData(responce.data);
           setData(responce.data);
-          birthdayMember(responce.data);
+          whoIsBirthdayMember(responce.data);
         });
     });
   });
@@ -97,24 +98,38 @@ const Home = ({ history }) => {
     });
   }, []);
 
-  function birthdayMember(data) {
+  function whoIsBirthdayMember(data) {
     //("birthdayMember 10");
     //console.log(data);
     //new Date().valueOf();
-    const today = getDate();
-    const year = today.getFullYear();
-    //console.log(year);
+    const todayAll = getDate();
+    const today = new Date();
+    today.setFullYear(todayAll.getFullYear());
+    today.setMonth(today.getMonth());
+    today.setDate(today.getDate());
+
+    const menber = [];
+
     for (const item of data) {
+      if (item.birthday === null) {
+        continue;
+      }
       for (let i = -1; i <= 1; i++) {
         const birthday = new Date(item.birthday);
         const birthday2 = new Date();
-        birthday2.setFullYear(today.getFullYear() + i);
+        birthday2.setFullYear(todayAll.getFullYear() + i);
         birthday2.setMonth(birthday.getMonth());
         birthday2.setDate(birthday.getDate());
-        //console.log(birthday2, i);
-        //console.log(i);
+        const diff = birthday2.valueOf() - today.valueOf();
+        //TODO:何日範囲がいいか話し合うこと
+        if (Math.abs(diff) <= 86400000 * 3) {
+          menber.push(item);
+        }
       }
     }
+
+    console.log(menber);
+    setBirthdayMembser(menber);
   }
 
   const getDate = () => {
@@ -247,7 +262,8 @@ const Home = ({ history }) => {
   }
 
   function findWord(item, word) {
-    const words = word.split(" ").filter((w) => w !== "");
+    const re = /\s+/g;
+    const words = word.split(re);
     let cnt = 0;
     for (const w of words) {
       if (item) {
@@ -270,7 +286,9 @@ const Home = ({ history }) => {
       return;
     }
 
-    const newData = allStorageData.filter((item) => findWord(item.memo, word));
+    const newData = allStorageData.filter((item) =>
+      findWord(item.memo + " " + item.name, word)
+    );
 
     if (newData.length > 0) {
       setData(newData);
