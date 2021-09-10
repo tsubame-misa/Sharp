@@ -25,7 +25,7 @@ import {
   IonPopover,
   IonList,
 } from "@ionic/react";
-import { addOutline } from "ionicons/icons";
+import { addOutline, cameraOutline } from "ionicons/icons";
 import "./Home.css";
 import firebase from "../firebase";
 import { useState } from "react";
@@ -308,12 +308,46 @@ const Home = ({ history }) => {
 
         {/*モーダル*/}
         <IonModal isOpen={showModal} cssClass="my-custom-class">
-          <div style={{ display: "flex" }}>
+          <IonHeader>
+            <IonToolbar class="Header">
+              <IonTitle>追加</IonTitle>
+              <IonButtons slot="start">
+                <IonButton 
+                  onClick={async () => {
+                    deleteSetData();
+                    setShowModal(false);
+                    setShowPopover({ showPopover: false });
+                  }}
+                >
+                  Cancel
+                </IonButton>
+              </IonButtons>
+              <IonButtons slot="end">
+                <IonButton 
+                  onClick={async () => {
+                    setShowModal(false);
+                    const save = popoverState.showPopover
+                      ? await updateData()
+                      : await saveData();
+                    if (save) {
+                      getAllData();
+                    }
+                    setShowPopover({ showPopover: false });
+                  }}
+                  //条件要検討
+                  disabled={name == null || name === ""}
+                >
+                  Save
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <div style={{ display: "flex" }} class="camera">
             <IonAvatar slot="start">
               <img src={img} />
             </IonAvatar>
-            <label htmlFor="filename">
-              　<span>Click</span>
+            <label htmlFor="filename" class="icon">
+              <IonIcon icon={cameraOutline} size="20px" />
               <input
                 type="file"
                 size="16"
@@ -322,56 +356,36 @@ const Home = ({ history }) => {
                 onChange={addPicture}
               />
             </label>
-
+          </div> 
+          <IonItem>        
+            <IonLabel position="floating">名前</IonLabel>
             <IonInput
               value={name}
-              placeholder="UserName"
+              placeholder="名前、あだ名"
               onIonChange={(e) => setName(e.detail.value)}
             ></IonInput>
-          </div>
+          </IonItem>
           <IonItem>
-            <IonLabel>生年月日</IonLabel>
+            <IonLabel position="floating">誕生日</IonLabel>
             <IonDatetime
               displayFormat="YYYY/MM/DD"
-              min="1994-03-14"
-              max="2012-12-09"
+              min="1900-01-01"
+              max="2020-12-31"
               value={selectedDate}
               onIonChange={(e) => setSelectedDate(e.detail.value)}
             ></IonDatetime>
           </IonItem>
           <IonItem>
+            <IonLabel position="floating">タグ</IonLabel>
             <IonTextarea
-              placeholder="Enter more information here..."
+              rows={5}
+              placeholder="例．＃大学　＃先輩"
               value={text}
               onIonChange={(e) => setText(e.detail.value)}
             ></IonTextarea>
           </IonItem>
-          <IonButton
-            onClick={async () => {
-              deleteSetData();
-              setShowModal(false);
-              setShowPopover({ showPopover: false });
-            }}
-          >
-            Close Modal
-          </IonButton>
-          <IonButton
-            onClick={async () => {
-              setShowModal(false);
-              const save = popoverState.showPopover
-                ? await updateData()
-                : await saveData();
-              if (save) {
-                getAllData();
-              }
-              setShowPopover({ showPopover: false });
-            }}
-            //条件要検討
-            disabled={name == null || name === ""}
-          >
-            Save
-          </IonButton>
         </IonModal>
+
       </IonContent>
       <IonPopover
         cssClass="my-custom-class"
