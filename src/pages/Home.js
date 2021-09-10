@@ -268,17 +268,18 @@ const Home = ({ history }) => {
                 <IonCardTitle className="title">{item.name}</IonCardTitle>
                 <IonCardSubtitle className="sub-title">
                   {getDisplayDate(item.birthday)}
+                  <IonButton
+                    className="edit-button"
+                    color="white"
+                    onClick={(e) => {
+                      e.persist();
+                      addModalData(item);
+                      setShowPopover({ showPopover: true, event: e });
+                    }}
+                  >
+                    •••
+                  </IonButton>
                 </IonCardSubtitle>
-                <IonButton
-                  className="edit-button"
-                  onClick={(e) => {
-                    e.persist();
-                    addModalData(item);
-                    setShowPopover({ showPopover: true, event: e });
-                  }}
-                >
-                  edit
-                </IonButton>
               </IonCardHeader>
               　　　　　　
               <IonCardContent>
