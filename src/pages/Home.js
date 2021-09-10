@@ -85,7 +85,7 @@ const Home = ({ history }) => {
   });
 
   useEffect(() => {
-    window.addEventListener("storage", (ev) => {
+    window.addEventListener("storage", () => {
       setFirstLogined(getVisited());
     });
   }, []);
@@ -97,14 +97,6 @@ const Home = ({ history }) => {
 
   function logout() {
     firebase.auth().signOut();
-  }
-
-  function logined() {
-    if ("visited" in localStorage) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   async function uploadImg() {

@@ -1,6 +1,7 @@
 import { IonSlide, IonButton } from "@ionic/react";
 
 const Slide4 = () => {
+  //TODO直した方がいい
   function logined() {
     if ("visited" in localStorage) {
       return true;
