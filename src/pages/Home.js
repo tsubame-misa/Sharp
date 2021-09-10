@@ -21,6 +21,7 @@ import {
   IonTextarea,
   IonDatetime,
   IonLabel,
+  IonSearchbar,
   useIonViewWillEnter,
   IonPopover,
   IonList,
@@ -28,14 +29,23 @@ import {
 import { addOutline, cameraOutline } from "ionicons/icons";
 import "./Home.css";
 import firebase from "../firebase";
+import Guide from "./Guide";
 import { useState } from "react";
+import {
+  deleteStorageImg,
+  getAllData,
+  setData2DB,
+  updateData2DB,
+  uploadImg2Storage,
+} from "../services/api";
 
 const Home = ({ history }) => {
   const [data, setData] = useState([]);
-  const [img, setImg] = useState(null);
-  const [imgName, setImgName] = useState(null);
-  const [preImgName, setPreImgName] = useState(null);
+  const [img, setImg] = useState("");
+  const [imgName, setImgName] = useState("");
+  const [preImgName, setPreImgName] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [searchText, setSearchText] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [name, setName] = useState(null);
   const [text, setText] = useState(null);
@@ -44,23 +54,29 @@ const Home = ({ history }) => {
     showPopover: false,
     event: undefined,
   });
+  const [userId, setUserId] = useState(null);
 
   useIonViewWillEnter(() => {
-    //sampleデータの取得
-    getAllData();
-  });
-
-  async function getAllData() {
     firebase.auth().onAuthStateChanged((user) => {
+      if (user === null) {
+        return;
+      }
+      setUserId(user.uid);
       const db = firebase.firestore();
       db.collection("/users")
-        .doc("zQDXYTHzUTZIkrWiAgt4")
+        .doc(user.uid)
         .get()
         .then((request) => {
-          setData(request.data().data);
+          return request.data();
+        })
+        .then((responce) => {
+          if (responce === undefined) {
+            return;
+          }
+          setData(responce.data);
         });
     });
-  }
+  });
 
   const getDate = () => {
     const date = new Date();
@@ -71,36 +87,40 @@ const Home = ({ history }) => {
     firebase.auth().signOut();
   }
 
-  async function addImg() {
-    if (img === null) {
+  function logined() {
+    if ("visited" in localStorage) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async function uploadImg() {
+    if (img === "") {
       return "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y";
     }
-    let newImageUri;
+
     try {
-      //TODO:画像の変更がない場合はパス
-
-      if (preImgName !== null) {
-        const desertRef = firebase.storage().ref().child(`image/${preImgName}`);
-        // Delete the file
-        desertRef
-          .delete()
-          .then(function () {
-            console.log("file deleted successfully");
-          })
-          .catch(function (error) {
-            // Uh-oh, an error occurred!
-          });
+      //画像変更なしの場合
+      if (imgName === preImgName) {
+        return img;
       }
-
+      //画像変更ありの場合
+      if (preImgName !== "") {
+        await deleteStorageImg(preImgName);
+      }
       const response = await fetch(img);
       const blob = await response.blob();
-      await firebase.storage().ref().child(`image/${imgName}`).put(blob);
-      var ref = firebase.storage().ref().child(`image/${imgName}`).put(blob);
-      newImageUri = await ref.snapshot.ref.getDownloadURL();
+
+      const newImageUri = await uploadImg2Storage(
+        preImgName === "" ? imgName : preImgName,
+        blob
+      );
+
       setImg(newImageUri);
       return newImageUri;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -120,26 +140,13 @@ const Home = ({ history }) => {
       memo: text,
       created: getDate(),
       id: new Date().getTime().toString(),
-      icon_path: await addImg(),
+      icon_path: await uploadImg(),
       icon_name: imgName,
     };
 
     const allData = data.concat(newData);
-
-    firebase.auth().onAuthStateChanged((user) => {
-      const db = firebase.firestore();
-      db.collection("/users")
-        .doc("zQDXYTHzUTZIkrWiAgt4")
-        .update({ data: allData })
-        .then(() => {
-          console.log("Document successfully written!");
-          deleteSetData();
-        })
-        .catch((error) => {
-          console.error("Error writing document: ", error);
-        });
-    });
-    return 1;
+    await setData2DB(allData, userId);
+    clearState();
   }
 
   async function updateData() {
@@ -149,7 +156,7 @@ const Home = ({ history }) => {
       memo: text,
       created: getDate(),
       id: ID === null ? new Date().getTime().toString() : ID,
-      icon_path: await addImg(),
+      icon_path: await uploadImg(),
       icon_name: imgName,
     };
 
@@ -161,27 +168,15 @@ const Home = ({ history }) => {
         return item;
       }
     });
-
-    firebase.auth().onAuthStateChanged((user) => {
-      const db = firebase.firestore();
-      db.collection("/users")
-        .doc("zQDXYTHzUTZIkrWiAgt4")
-        .update({ data: allData })
-        .then(() => {
-          console.log("Document successfully written!");
-          deleteSetData();
-        })
-        .catch((error) => {
-          console.error("Error writing document: ", error);
-        });
-    });
-    return 1;
+    await updateData2DB(allData, userId);
+    clearState();
   }
 
-  function deleteSetData() {
+  function clearState() {
     setName(null);
-    setImg(null);
-    setImgName(null);
+    setImg("");
+    setImgName("");
+    setPreImgName("");
     setText(null);
     setSelectedDate(null);
     setID(null);
@@ -215,33 +210,15 @@ const Home = ({ history }) => {
 
   async function deleteProfile() {
     const deletedData = data.filter((item) => item.id !== ID);
+    await updateData2DB(deletedData, userId);
+    if (preImgName !== "") {
+      await deleteStorageImg(preImgName);
+    }
+    clearState();
+  }
 
-    firebase.auth().onAuthStateChanged((user) => {
-      const db = firebase.firestore();
-      db.collection("/users")
-        .doc("zQDXYTHzUTZIkrWiAgt4")
-        .update({ data: deletedData })
-        .then(() => {
-          console.log("Document successfully written!");
-        })
-        .catch((error) => {
-          console.error("Error writing document: ", error);
-        });
-    });
-
-    const desertRef = firebase.storage().ref().child(`image/${preImgName}`);
-    // Delete the file
-    desertRef
-      .delete()
-      .then(function () {
-        console.log("file deleted successfully");
-        deleteSetData();
-      })
-      .catch(function (error) {
-        // Uh-oh, an error occurred!
-      });
-
-    return 1;
+  if (logined() === false) {
+    return <Guide modal={true} />;
   }
 
   return (
@@ -258,6 +235,20 @@ const Home = ({ history }) => {
       </IonHeader>
       <IonContent>
         {/*リストの表示*/}
+
+        <IonSearchbar
+          className="search"
+          value={searchText}
+          showCancelButton="focus"
+          placeholder="検索"
+          cancelButtonText="キャンセル"
+          /* onIonCancel={() => SearchData(false)}
+          onIonChange={(e) => {
+            setSearch(!search);
+            SearchData(true, e.detail.value);
+          }} */
+        ></IonSearchbar>
+
         {data.map((item) => {
           return (
             <IonCard key={item.id}>
@@ -277,17 +268,18 @@ const Home = ({ history }) => {
                 <IonCardTitle className="title">{item.name}</IonCardTitle>
                 <IonCardSubtitle className="sub-title">
                   {getDisplayDate(item.birthday)}
+                  <IonButton
+                    className="edit-button"
+                    color="white"
+                    onClick={(e) => {
+                      e.persist();
+                      addModalData(item);
+                      setShowPopover({ showPopover: true, event: e });
+                    }}
+                  >
+                    •••
+                  </IonButton>
                 </IonCardSubtitle>
-                <IonButton
-                  className="edit-button"
-                  onClick={(e) => {
-                    e.persist();
-                    addModalData(item);
-                    setShowPopover({ showPopover: true, event: e });
-                  }}
-                >
-                  edit
-                </IonButton>
               </IonCardHeader>
               　　　　　　
               <IonCardContent>
@@ -314,7 +306,7 @@ const Home = ({ history }) => {
               <IonButtons slot="start">
                 <IonButton 
                   onClick={async () => {
-                    deleteSetData();
+                    clearState();
                     setShowModal(false);
                     setShowPopover({ showPopover: false });
                   }}
@@ -344,7 +336,14 @@ const Home = ({ history }) => {
           </IonHeader>
           <div style={{ display: "flex" }} class="camera">
             <IonAvatar slot="start">
-              <img src={img} />
+              <img
+                src={
+                  img !== ""
+                    ? img
+                    : "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
+                }
+                alt="icon"
+              />
             </IonAvatar>
             <label htmlFor="filename" class="icon">
               <IonIcon icon={cameraOutline} size="20px" />
@@ -384,6 +383,7 @@ const Home = ({ history }) => {
               onIonChange={(e) => setText(e.detail.value)}
             ></IonTextarea>
           </IonItem>
+
         </IonModal>
 
       </IonContent>
@@ -400,7 +400,8 @@ const Home = ({ history }) => {
           <IonItem
             onClick={async () => {
               await deleteProfile();
-              await getAllData();
+              const data = await getAllData(userId);
+              setData(data);
               setShowPopover({ showPopover: false });
             }}
           >

@@ -17,6 +17,12 @@ img {
   text-align: right;
   float: right;
 }
+.edit-button {
+  display: inline-block;
+  color: black;
+  background-color: white;
+  padding-bottom: 38px;
+}
 
 .memo {
   padding-left: 25px;
