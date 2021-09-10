@@ -30,7 +30,7 @@ import { addOutline, cameraOutline } from "ionicons/icons";
 import "./Home.css";
 import firebase from "../firebase";
 import Guide from "./Guide";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   deleteStorageImg,
   getAllData,
@@ -38,6 +38,11 @@ import {
   updateData2DB,
   uploadImg2Storage,
 } from "../services/api";
+
+function getVisited() {
+  const v = localStorage.getItem("visited");
+  return !!parseInt(v, 10);
+}
 
 const Home = ({ history }) => {
   const [data, setData] = useState([]);
@@ -55,6 +60,7 @@ const Home = ({ history }) => {
     event: undefined,
   });
   const [userId, setUserId] = useState(null);
+  const [firstLogined, setFirstLogined] = useState(getVisited());
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -77,6 +83,12 @@ const Home = ({ history }) => {
         });
     });
   });
+
+  useEffect(() => {
+    window.addEventListener("storage", (ev) => {
+      setFirstLogined(getVisited());
+    });
+  }, []);
 
   const getDate = () => {
     const date = new Date();
@@ -217,11 +229,10 @@ const Home = ({ history }) => {
     clearState();
   }
 
-  if (logined() === false) {
+  console.log("firstLogined", firstLogined);
+  if (!firstLogined) {
     return <Guide modal={true} />;
   }
-
-  console.log("home");
 
   return (
     <IonPage>

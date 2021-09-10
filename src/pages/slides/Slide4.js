@@ -11,7 +11,8 @@ const Slide4 = () => {
 
   function setVisited() {
     if (!logined()) {
-      localStorage.setItem("visited", "true");
+      localStorage.setItem("visited", "1");
+      window.dispatchEvent(new StorageEvent("storage"));
     }
   }
 
@@ -24,7 +25,7 @@ const Slide4 = () => {
           登録してみましょう！
         </p>
         <IonButton
-          routerLink={"/home"}
+          //routerLink={"/home"}
           fill="outline"
           size="large"
           onClick={() => {
