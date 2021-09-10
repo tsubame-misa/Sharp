@@ -27,7 +27,7 @@ import {
   IonList,
   IonAlert,
 } from "@ionic/react";
-import { addOutline, cameraOutline } from "ionicons/icons";
+import { addOutline, cameraOutline, ellipsisHorizontal } from "ionicons/icons";
 import "./Home.css";
 import firebase from "../firebase";
 import Guide from "./Guide";
@@ -254,39 +254,46 @@ const Home = ({ history }) => {
           return (
             <IonCard className="card" key={item.id}>
               <IonCardHeader className="cardHeader">
-                <div className="avatar">
-                  <IonAvatar>
-                    <img
-                      src={
-                        item.icon_path !== ""
-                          ? item.icon_path
-                          : "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
-                      }
-                      alt="icon"
-                    />
-                  </IonAvatar>
+                <div className="person">
+                  <div className="avatar">
+                    <IonAvatar>
+                      <img
+                        src={
+                          item.icon_path !== ""
+                            ? item.icon_path
+                            : "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
+                        }
+                        alt="icon"
+                      />
+                    </IonAvatar>
+                  </div>
+                  <div className="titles">
+                    <IonCardTitle className="title">{item.name}</IonCardTitle>
+                    <IonCardSubtitle className="sub-title">
+                      {getDisplayDate(item.birthday)}
+                    </IonCardSubtitle>
+                  </div>
                 </div>
-                <IonCardTitle className="title">{item.name}</IonCardTitle>
-                <IonCardSubtitle className="sub-title">
-                  {getDisplayDate(item.birthday)}
-                  <IonButton
-                    className="edit-button"
-                    color="white"
-                    onClick={(e) => {
-                      e.persist();
-                      addModalData(item);
-                      setShowPopover({ showPopover: true, event: e });
-                    }}
-                  >
-                    •••
-                  </IonButton>
-                </IonCardSubtitle>
+
+                <IonButton
+                  className="edit-button"
+                  color="white"
+                  onClick={(e) => {
+                    e.persist();
+                    addModalData(item);
+                    setShowPopover({ showPopover: true, event: e });
+                  }}
+                >
+                  <IonIcon
+                    slot="icon-only"
+                    size="default"
+                    icon={ellipsisHorizontal}
+                  ></IonIcon>
+                </IonButton>
               </IonCardHeader>
               　　
               <IonCardContent className="cardContent">
-                <IonItem className="memo" color="light" lines="none">
-                  {item.memo}
-                </IonItem>
+                <div className="memo">{item.memo}</div>
               </IonCardContent>
             </IonCard>
           );

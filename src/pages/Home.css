@@ -15,6 +15,12 @@
 
 .cardHeader {
   padding-bottom: 0px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.person {
+  display: flex;
 }
 
 .avatar {
@@ -29,25 +35,31 @@ img {
   height: 50px;
 }
 
+.titles {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .title {
   display: inline-block;
-  padding-left: 25px;
+  padding-left: 15px;
+  font-size: 15px;
 }
 
 .sub-title {
   display: inline-block;
-  padding-left: 25px;
+  padding-left: 15px;
   height: 10px;
+  font-size: 10px;
 }
 
-.edit-button {
-  display: inline-block;
+ion-button.edit-button {
   color: black;
-  position: relative;
-  left: 85px;
-  bottom: 50px;
   /* background-color: white; */
-  padding-top: 0;
+  padding-bottom: 18px;
+  padding-left: 15px;
+  width: 65px;
 }
 
 .cardContent {
@@ -55,9 +67,12 @@ img {
 }
 
 .memo {
-  line-height: 30px;
-  padding-left: 25px;
-  padding-top: 10px;
+  display: flex;
+  background-color: #f1f1f1;
+  color: black;
+  line-height: 15px;
+  font-size: 10px;
+  padding: 10px;
   /*   background-color: #1c3786; */
 }
 
