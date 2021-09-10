@@ -248,7 +248,8 @@ const Home = ({ history }) => {
   }
 
   function findWord(item, word) {
-    const words = word.split(" ").filter((w) => w !== "");
+    const re = /\s+/g;
+    const words = word.split(re);
     let cnt = 0;
     for (const w of words) {
       if (item) {
@@ -271,7 +272,9 @@ const Home = ({ history }) => {
       return;
     }
 
-    const newData = allStorageData.filter((item) => findWord(item.memo, word));
+    const newData = allStorageData.filter((item) =>
+      findWord(item.memo + " " + item.name, word)
+    );
 
     if (newData.length > 0) {
       setData(newData);
