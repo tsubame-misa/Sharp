@@ -25,6 +25,7 @@ import {
   useIonViewWillEnter,
   IonPopover,
   IonList,
+  IonAlert,
 } from "@ionic/react";
 import { addOutline, cameraOutline } from "ionicons/icons";
 import "./Home.css";
@@ -55,6 +56,7 @@ const Home = ({ history }) => {
     event: undefined,
   });
   const [userId, setUserId] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -304,7 +306,7 @@ const Home = ({ history }) => {
             <IonToolbar class="Header">
               <IonTitle>追加</IonTitle>
               <IonButtons slot="start">
-                <IonButton 
+                <IonButton
                   onClick={async () => {
                     clearState();
                     setShowModal(false);
@@ -315,7 +317,7 @@ const Home = ({ history }) => {
                 </IonButton>
               </IonButtons>
               <IonButtons slot="end">
-                <IonButton 
+                <IonButton
                   onClick={async () => {
                     setShowModal(false);
                     const save = popoverState.showPopover
@@ -355,8 +357,8 @@ const Home = ({ history }) => {
                 onChange={addPicture}
               />
             </label>
-          </div> 
-          <IonItem>        
+          </div>
+          <IonItem>
             <IonLabel position="floating">名前</IonLabel>
             <IonInput
               value={name}
@@ -383,9 +385,7 @@ const Home = ({ history }) => {
               onIonChange={(e) => setText(e.detail.value)}
             ></IonTextarea>
           </IonItem>
-
         </IonModal>
-
       </IonContent>
       <IonPopover
         cssClass="my-custom-class"
@@ -399,14 +399,35 @@ const Home = ({ history }) => {
           <IonItem onClick={() => setShowModal(true)}>編集</IonItem>
           <IonItem
             onClick={async () => {
-              await deleteProfile();
-              const data = await getAllData(userId);
-              setData(data);
-              setShowPopover({ showPopover: false });
+              //   await deleteProfile();
+              //   const data = await getAllData(userId);
+              //   setData(data);
+              //   setShowPopover({ showPopover: false });
+              setShowAlert(true);
             }}
           >
             削除
           </IonItem>
+          <IonAlert
+            isOpen={showAlert}
+            onDidDismiss={() => setShowAlert(false)}
+            cssClass="my-custom-class"
+            header={"Alert"}
+            message={"削除しますか"}
+            buttons={[
+              "Cancel",
+              {
+                text: "OK",
+                // handler={ async (d) => {
+                //   await deleteProfile();
+                //   const data = await getAllData(userId);
+                //   setData(data);
+                //   setShowPopover({ showPopover: false });
+                //   console.log("ok pressed");
+                // },
+              },
+            ]}
+          />
         </IonList>
       </IonPopover>
     </IonPage>
