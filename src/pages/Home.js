@@ -221,6 +221,8 @@ const Home = ({ history }) => {
     return <Guide modal={true} />;
   }
 
+  console.log("home");
+
   return (
     <IonPage>
       <IonHeader>
@@ -301,10 +303,10 @@ const Home = ({ history }) => {
         {/*モーダル*/}
         <IonModal isOpen={showModal} cssClass="my-custom-class">
           <IonHeader>
-            <IonToolbar class="Header">
+            <IonToolbar className="Header">
               <IonTitle>追加</IonTitle>
               <IonButtons slot="start">
-                <IonButton 
+                <IonButton
                   onClick={async () => {
                     clearState();
                     setShowModal(false);
@@ -315,15 +317,12 @@ const Home = ({ history }) => {
                 </IonButton>
               </IonButtons>
               <IonButtons slot="end">
-                <IonButton 
+                <IonButton
                   onClick={async () => {
                     setShowModal(false);
-                    const save = popoverState.showPopover
-                      ? await updateData()
-                      : await saveData();
-                    if (save) {
-                      getAllData();
-                    }
+                    popoverState.showPopover ? updateData() : saveData();
+                    const data = await getAllData(userId);
+                    setData(data);
                     setShowPopover({ showPopover: false });
                   }}
                   //条件要検討
@@ -334,7 +333,7 @@ const Home = ({ history }) => {
               </IonButtons>
             </IonToolbar>
           </IonHeader>
-          <div style={{ display: "flex" }} class="camera">
+          <div style={{ display: "flex" }} className="camera">
             <IonAvatar slot="start">
               <img
                 src={
@@ -345,7 +344,7 @@ const Home = ({ history }) => {
                 alt="icon"
               />
             </IonAvatar>
-            <label htmlFor="filename" class="icon">
+            <label htmlFor="filename" className="icon">
               <IonIcon icon={cameraOutline} size="20px" />
               <input
                 type="file"
@@ -355,8 +354,8 @@ const Home = ({ history }) => {
                 onChange={addPicture}
               />
             </label>
-          </div> 
-          <IonItem>        
+          </div>
+          <IonItem>
             <IonLabel position="floating">名前</IonLabel>
             <IonInput
               value={name}
@@ -383,9 +382,7 @@ const Home = ({ history }) => {
               onIonChange={(e) => setText(e.detail.value)}
             ></IonTextarea>
           </IonItem>
-
         </IonModal>
-
       </IonContent>
       <IonPopover
         cssClass="my-custom-class"
