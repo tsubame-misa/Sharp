@@ -67,6 +67,9 @@ const Home = ({ history }) => {
           return request.data();
         })
         .then((responce) => {
+          if (responce === undefined) {
+            return;
+          }
           setData(responce.data);
         });
     });
@@ -82,7 +85,6 @@ const Home = ({ history }) => {
   }
 
   async function uploadImg() {
-    console.log(img, preImgName, imgName);
     if (img === "") {
       return "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y";
     }
