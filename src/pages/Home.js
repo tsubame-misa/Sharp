@@ -495,6 +495,7 @@ const Home = ({ history }) => {
                     });
                     setData(sortedData);
                     setAllData(sortedData);
+                    whoIsBirthdayMember(sortedData);
                     setshowPopover1({ showPopover: false });
                   }}
                   //条件要検討
@@ -593,6 +594,7 @@ const Home = ({ history }) => {
                   });
                   setData(sortedData);
                   setAllData(sortedData);
+                  whoIsBirthdayMember(sortedData);
                 },
               },
             ]}
