@@ -1,3 +1,20 @@
+.Header {
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  font-size: 30px;
+  --ion-toolbar-color: white;
+  --ion-toolbar-background: black;
+}
+.ionTitle {
+  font-size: 30px;
+}
+.card {
+  color: #f5f6f9;
+}
+
+/* .cardHeader {
+  background-color: aqua;
+} */
 .avatar {
   display: block;
   width: 50px;
@@ -20,32 +37,38 @@ img {
 .edit-button {
   display: inline-block;
   color: black;
-  background-color: white;
+  /* background-color: white; */
   padding-bottom: 38px;
 }
 
+.cardContent {
+  padding-top: 0px;
+}
 .memo {
   padding-left: 25px;
+  padding-top: 0px;
+  /*   background-color: #1c3786; */
 }
+
 .my-custom-class .modal-wrapper .ion-page {
   display: inline;
 }
 
 .camera {
-    position: relative;
-    margin-top: 20px;
-    margin-left: 10px;
+  position: relative;
+  margin-top: 20px;
+  margin-left: 10px;
 }
-.icon{
-    position: absolute;
-    top: 55%;
-    left: 25px;
-    -ms-transform: translate(-50%,-50%);
-    -webkit-transform: translate(-50%,-50%);
-    transform: translate(-50%,-50%);
-    margin:0;
-    padding:0;
-    font-size: 20px;
+.icon {
+  position: absolute;
+  top: 55%;
+  left: 25px;
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
 }
 
 #filename {
