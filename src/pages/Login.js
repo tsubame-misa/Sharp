@@ -25,7 +25,7 @@ const Login = () => {
         var token = credential.accessToken;
         // The signed-in user info.
         var user = result.user;
-        console.log("ok");
+        console.info("ok");
         // ...
       })
       .catch((error) => {

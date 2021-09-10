@@ -26,7 +26,7 @@ import {
   IonPopover,
   IonList,
 } from "@ionic/react";
-import { addOutline } from "ionicons/icons";
+import { addOutline, cameraOutline } from "ionicons/icons";
 import "./Home.css";
 import firebase from "../firebase";
 import Guide from "./Guide";
@@ -224,8 +224,8 @@ const Home = ({ history }) => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>#Sharp</IonTitle>
+        <IonToolbar className="Header">
+          <IonTitle className="ionTitle">#Sharp</IonTitle>
           <IonButtons slot="end">
             <IonButton fill="outline" onClick={() => logout()}>
               ログアウト
@@ -235,7 +235,6 @@ const Home = ({ history }) => {
       </IonHeader>
       <IonContent>
         {/*リストの表示*/}
-
         <IonSearchbar
           className="search"
           value={searchText}
@@ -251,8 +250,8 @@ const Home = ({ history }) => {
 
         {data.map((item) => {
           return (
-            <IonCard key={item.id}>
-              <IonCardHeader>
+            <IonCard className="card" key={item.id}>
+              <IonCardHeader className="cardHeader">
                 <div className="avatar">
                   <IonAvatar>
                     <img
@@ -281,8 +280,8 @@ const Home = ({ history }) => {
                   </IonButton>
                 </IonCardSubtitle>
               </IonCardHeader>
-              　　　　　　
-              <IonCardContent>
+              　　
+              <IonCardContent className="cardContent">
                 <IonItem className="memo" color="light" lines="none">
                   {item.memo}
                 </IonItem>
@@ -293,14 +292,48 @@ const Home = ({ history }) => {
 
         {/*右下のボタン*/}
         <IonFab vertical="bottom" horizontal="end" slot="fixed" id={"test"}>
-          <IonFabButton color="primary" onClick={() => setShowModal(true)}>
+          <IonFabButton color="dark" onClick={() => setShowModal(true)}>
             <IonIcon icon={addOutline} size="20px" />
           </IonFabButton>
         </IonFab>
 
         {/*モーダル*/}
         <IonModal isOpen={showModal} cssClass="my-custom-class">
-          <div style={{ display: "flex" }}>
+          <IonHeader>
+            <IonToolbar class="Header">
+              <IonTitle>追加</IonTitle>
+              <IonButtons slot="start">
+                <IonButton
+                  onClick={async () => {
+                    clearState();
+                    setShowModal(false);
+                    setShowPopover({ showPopover: false });
+                  }}
+                >
+                  Cancel
+                </IonButton>
+              </IonButtons>
+              <IonButtons slot="end">
+                <IonButton
+                  onClick={async () => {
+                    setShowModal(false);
+                    const save = popoverState.showPopover
+                      ? await updateData()
+                      : await saveData();
+                    if (save) {
+                      getAllData();
+                    }
+                    setShowPopover({ showPopover: false });
+                  }}
+                  //条件要検討
+                  disabled={name == null || name === ""}
+                >
+                  Save
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <div style={{ display: "flex" }} class="camera">
             <IonAvatar slot="start">
               <img
                 src={
@@ -311,8 +344,8 @@ const Home = ({ history }) => {
                 alt="icon"
               />
             </IonAvatar>
-            <label htmlFor="filename">
-              　<span>Click</span>
+            <label htmlFor="filename" class="icon">
+              <IonIcon icon={cameraOutline} size="20px" />
               <input
                 type="file"
                 size="16"
@@ -321,52 +354,34 @@ const Home = ({ history }) => {
                 onChange={addPicture}
               />
             </label>
-
-            <IonInput
-              value={name}
-              placeholder="UserName"
-              onIonChange={(e) => setName(e.detail.value)}
-            ></IonInput>
           </div>
           <IonItem>
-            <IonLabel>生年月日</IonLabel>
+            <IonLabel position="floating">名前</IonLabel>
+            <IonInput
+              value={name}
+              placeholder="名前、あだ名"
+              onIonChange={(e) => setName(e.detail.value)}
+            ></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonLabel position="floating">誕生日</IonLabel>
             <IonDatetime
               displayFormat="YYYY/MM/DD"
-              min="1994-03-14"
-              max="2012-12-09"
+              min="1900-01-01"
+              max="2020-12-31"
               value={selectedDate}
               onIonChange={(e) => setSelectedDate(e.detail.value)}
             ></IonDatetime>
           </IonItem>
           <IonItem>
+            <IonLabel position="floating">タグ</IonLabel>
             <IonTextarea
-              placeholder="Enter more information here..."
+              rows={5}
+              placeholder="例．＃大学　＃先輩"
               value={text}
               onIonChange={(e) => setText(e.detail.value)}
             ></IonTextarea>
           </IonItem>
-          <IonButton
-            onClick={async () => {
-              clearState();
-              setShowModal(false);
-              setShowPopover({ showPopover: false });
-            }}
-          >
-            Close Modal
-          </IonButton>
-          <IonButton
-            onClick={async () => {
-              setShowModal(false);
-              await (popoverState.showPopover ? updateData() : saveData());
-              const data = await getAllData(userId);
-              setData(data);
-              setShowPopover({ showPopover: false });
-            }}
-            //条件要検討
-            disabled={name == null || name === ""}
-          >
-            Save
-          </IonButton>
         </IonModal>
       </IonContent>
       <IonPopover
