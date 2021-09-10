@@ -26,7 +26,7 @@ const Guide = ({ modal, history }) => {
           </IonToolbar>
         </IonHeader>
       )}
-      <IonContent fullscreen class="ion-padding" scroll-y="false">
+      <IonContent fullscreen class="ion-padding" scroll-y="false" color="dark">
         <IonSlides
           pager={true}
           options={{ initialSlide: 0 }}
