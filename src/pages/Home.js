@@ -143,7 +143,11 @@ const Home = ({ history }) => {
       }
     }
 
-    setBirthdayMembser(menber);
+    const sortedData = [...menber].sort((a, b) => {
+      return new Date(a.birthday) - new Date(b.birthday);
+    });
+
+    setBirthdayMembser(sortedData);
   }
 
   const getDate = () => {
@@ -370,7 +374,7 @@ const Home = ({ history }) => {
               <IonItemDivider color="medium">誕生日</IonItemDivider>
               {birthdayMember.map((item) => {
                 return (
-                  <div>
+                  <div key={item.id}>
                     {/*TODO:ダブった時にヘッダーが一つになるように */}
                     <IonItemDivider color="light">
                       {getBirthdayListDate(item.birthday)}
