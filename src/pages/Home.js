@@ -29,6 +29,7 @@ import {
 import { addOutline } from "ionicons/icons";
 import "./Home.css";
 import firebase from "../firebase";
+import Guide from "./Guide";
 import { useState } from "react";
 import {
   deleteStorageImg,
@@ -84,6 +85,14 @@ const Home = ({ history }) => {
 
   function logout() {
     firebase.auth().signOut();
+  }
+
+  function logined() {
+    if ("visited" in localStorage) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   async function uploadImg() {
@@ -206,6 +215,10 @@ const Home = ({ history }) => {
       await deleteStorageImg(preImgName);
     }
     clearState();
+  }
+
+  if (logined() === false) {
+    return <Guide modal={true} />;
   }
 
   return (
