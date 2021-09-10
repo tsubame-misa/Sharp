@@ -265,8 +265,8 @@ const Home = ({ history }) => {
   }
 
   async function SearchData(search, word) {
-    setSearchText(word);
     if (!search || word === "" || word === undefined) {
+      setSearch(!search);
       setData(allStorageData);
       return;
     }
@@ -305,7 +305,12 @@ const Home = ({ history }) => {
           placeholder="検索"
           cancelButtonText="キャンセル"
           onIonCancel={() => SearchData(false)}
+          /*onIonChange={(e) => {
+            setSearch(!search);
+            SearchData(true, e.detail.value);
+          }}*/
           onIonChange={(e) => {
+            setSearchText(e.target.value);
             setSearch(!search);
             SearchData(true, e.detail.value);
           }}
