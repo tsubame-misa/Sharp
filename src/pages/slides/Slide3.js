@@ -8,7 +8,7 @@ const Slide3 = () => {
       <div>
         <img src={img} alt="ロゴ画像" className="logo" />
         <div className="position">
-          <div className="title">#閲覧</div>
+          <div className="guide-title">#閲覧</div>
           <p>話したことを思い出す</p>
         </div>
       </div>
