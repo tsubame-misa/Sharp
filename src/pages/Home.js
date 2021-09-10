@@ -85,6 +85,7 @@ const Home = ({ history }) => {
           }
           setAllData(responce.data);
           setData(responce.data);
+          birthdayMember(responce.data);
         });
     });
   });
@@ -94,6 +95,27 @@ const Home = ({ history }) => {
       setFirstLogined(getVisited());
     });
   }, []);
+
+  function birthdayMember(data) {
+    console.log("birthdayMember 10");
+    console.log(data);
+    //new Date().valueOf();
+    const today = getDate();
+    const year = today.getFullYear();
+    console.log(year);
+    for (const item of data) {
+      for (let i = -1; i <= 1; i++) {
+        const birthday = new Date(item.birthday);
+        const birthday2 = new Date();
+        console.log(birthday, typeof birthday);
+        birthday2.setFullYear(today.getFullYear() + i);
+        birthday2.setMonth(birthday.getMonth());
+        birthday2.setDate(birthday.getDate());
+        console.log(birthday2, i);
+        console.log(i);
+      }
+    }
+  }
 
   const getDate = () => {
     const date = new Date();
