@@ -105,3 +105,12 @@ ion-button.edit-button {
 #filename {
   display: none;
 }
+
+.empty {
+  height: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 60px;
+  text-align: center;
+}

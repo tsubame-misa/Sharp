@@ -402,52 +402,62 @@ const Home = ({ history }) => {
           </div>
         )}
 
-        {data.map((item) => {
-          return (
-            <IonCard className="card" key={item.id}>
-              <IonCardHeader className="cardHeader">
-                <div className="person">
-                  <div className="avatar">
-                    <IonAvatar>
-                      <img
-                        src={
-                          item.icon_path !== "" ? item.icon_path : avatar_first
-                        }
-                        alt="icon"
-                      />
-                    </IonAvatar>
+        {data.length !== 0 ? (
+          data.map((item) => {
+            return (
+              <IonCard className="card" key={item.id}>
+                <IonCardHeader className="cardHeader">
+                  <div className="person">
+                    <div className="avatar">
+                      <IonAvatar className="avatar-ionic">
+                        <img
+                          src={
+                            item.icon_path !== ""
+                              ? item.icon_path
+                              : avatar_first
+                          }
+                          alt="icon"
+                        />
+                      </IonAvatar>
+                    </div>
+                    <div className="titles">
+                      <IonCardTitle className="title">{item.name}</IonCardTitle>
+                      <IonCardSubtitle className="sub-title">
+                        {getDisplayDate(item.birthday)}
+                      </IonCardSubtitle>
+                    </div>
                   </div>
-                  <div className="titles">
-                    <IonCardTitle className="title">{item.name}</IonCardTitle>
-                    <IonCardSubtitle className="sub-title">
-                      {getDisplayDate(item.birthday)}
-                    </IonCardSubtitle>
-                  </div>
-                </div>
 
-                <IonButton
-                  className="edit-button"
-                  color="white"
-                  onClick={(e) => {
-                    e.persist();
-                    addModalData(item);
-                    setshowPopover1({ showPopover1: true, event: e });
-                  }}
-                >
-                  <IonIcon
-                    slot="icon-only"
-                    size="default"
-                    icon={ellipsisHorizontal}
-                  ></IonIcon>
-                </IonButton>
-              </IonCardHeader>
-              　　
-              <IonCardContent className="cardContent">
-                <div className="memo">{item.memo}</div>
-              </IonCardContent>
-            </IonCard>
-          );
-        })}
+                  <IonButton
+                    className="edit-button"
+                    color="white"
+                    onClick={(e) => {
+                      e.persist();
+                      addModalData(item);
+                      setshowPopover1({ showPopover1: true, event: e });
+                    }}
+                  >
+                    <IonIcon
+                      slot="icon-only"
+                      size="default"
+                      icon={ellipsisHorizontal}
+                    ></IonIcon>
+                  </IonButton>
+                </IonCardHeader>
+                　　
+                <IonCardContent className="cardContent">
+                  <div className="memo">{item.memo}</div>
+                </IonCardContent>
+              </IonCard>
+            );
+          })
+        ) : (
+          <div class="empty">
+            右下のボタンからプロフィールを
+            <br />
+            追加しましょう
+          </div>
+        )}
 
         {/*右下のボタン*/}
         <IonFab vertical="bottom" horizontal="end" slot="fixed" id={"test"}>
