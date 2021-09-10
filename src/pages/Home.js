@@ -31,7 +31,8 @@ import { addOutline, cameraOutline, ellipsisHorizontal } from "ionicons/icons";
 import "./Home.css";
 import firebase from "../firebase";
 import Guide from "./Guide";
-import { memo, useEffect, useState } from "react";
+import avatar_first from "../images/avatar.png";
+import { useEffect, useState } from "react";
 import {
   deleteStorageImg,
   getAllData,
@@ -142,7 +143,7 @@ const Home = ({ history }) => {
 
   async function uploadImg() {
     if (img === "") {
-      return "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y";
+      return "";
     }
 
     try {
@@ -234,9 +235,7 @@ const Home = ({ history }) => {
       setImgName(item.icon_name);
       setPreImgName(item.icon_name);
     } else {
-      setImg(
-        "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
-      );
+      setImg("");
     }
     setText(item.memo);
     setSelectedDate(item.birthday);
@@ -343,9 +342,7 @@ const Home = ({ history }) => {
                     <IonAvatar>
                       <img
                         src={
-                          item.icon_path !== ""
-                            ? item.icon_path
-                            : "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
+                          item.icon_path !== "" ? item.icon_path : avatar_first
                         }
                         alt="icon"
                       />
@@ -426,30 +423,23 @@ const Home = ({ history }) => {
               </IonButtons>
             </IonToolbar>
           </IonHeader>
-          <div style={{ display: "flex" }} className="camera">
+          <div className="camera">
             <IonAvatar slot="start">
-              <img
-                src={
-                  img !== ""
-                    ? img
-                    : "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
-                }
-                alt="icon"
-              />
+              <img src={img !== "" ? img : avatar_first} alt="icon" />
+              <label htmlFor="filename" className="cameraIcon">
+                <IonIcon icon={cameraOutline} size="20px" />
+                <input
+                  type="file"
+                  size="16"
+                  id="filename"
+                  src={img}
+                  onChange={addPicture}
+                />
+              </label>
             </IonAvatar>
-            <label htmlFor="filename" className="icon">
-              <IonIcon icon={cameraOutline} size="20px" />
-              <input
-                type="file"
-                size="16"
-                id="filename"
-                src={img}
-                onChange={addPicture}
-              />
-            </label>
           </div>
           <IonItem>
-            <IonLabel position="floating">名前</IonLabel>
+            <IonLabel position="floating">名前*</IonLabel>
             <IonInput
               value={name}
               placeholder="名前、あだ名"
