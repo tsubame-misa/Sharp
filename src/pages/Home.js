@@ -77,6 +77,7 @@ const Home = ({ history }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [search, setSearch] = useState(false);
   const [birthdayMember, setBirthdayMembser] = useState([]);
+  const [showBirthdayList, setShowBirthdayList] = useState(true);
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -374,30 +375,39 @@ const Home = ({ history }) => {
         {birthdayMember.length !== 0 && (
           <div>
             <IonList>
-              <IonItemDivider color="medium">誕生日</IonItemDivider>
-              {birthdayMember.map((item) => {
-                return (
-                  <div key={item.id}>
-                    {/*TODO:ダブった時にヘッダーが一つになるように */}
-                    <IonItemDivider color="light">
-                      {getBirthdayListDate(item.birthday)}
-                    </IonItemDivider>
-                    <IonItem lines="full">
-                      <IonAvatar slot="start">
-                        <img
-                          src={
-                            item.icon_path !== ""
-                              ? item.icon_path
-                              : avatar_first
-                          }
-                          alt="icon birthday"
-                        />
-                      </IonAvatar>
-                      {item.name}
-                    </IonItem>
-                  </div>
-                );
-              })}
+              <IonItemDivider color="medium">
+                誕生日
+                <IonButton
+                  fill="clear"
+                  onClick={() => setShowBirthdayList(!showBirthdayList)}
+                >
+                  {showBirthdayList ? "閉じる" : "見る"}
+                </IonButton>
+              </IonItemDivider>
+              {showBirthdayList &&
+                birthdayMember.map((item) => {
+                  return (
+                    <div key={item.id}>
+                      {/*TODO:ダブった時にヘッダーが一つになるように */}
+                      <IonItemDivider color="light">
+                        {getBirthdayListDate(item.birthday)}
+                      </IonItemDivider>
+                      <IonItem lines="full">
+                        <IonAvatar slot="start">
+                          <img
+                            src={
+                              item.icon_path !== ""
+                                ? item.icon_path
+                                : avatar_first
+                            }
+                            alt="icon birthday"
+                          />
+                        </IonAvatar>
+                        {item.name}
+                      </IonItem>
+                    </div>
+                  );
+                })}
             </IonList>
             <IonItemDivider color="medium" style={{ marginTop: "40px" }}>
               メンバー
