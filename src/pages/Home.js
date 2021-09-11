@@ -374,8 +374,6 @@ const Home = ({ history }) => {
     return <Guide modal={true} />;
   }
 
-  console.log(data);
-
   return (
     <IonPage>
       <IonHeader>
@@ -556,6 +554,7 @@ const Home = ({ history }) => {
                 <IonButton
                   onClick={async () => {
                     setShowModal(false);
+                    setshowPopover1({ showPopover1: false });
                     await (popoverState1.showPopover1
                       ? updateData()
                       : saveData());
@@ -566,7 +565,6 @@ const Home = ({ history }) => {
                     setData(sortedData);
                     setAllData(sortedData);
                     whoIsBirthdayMember(sortedData);
-                    setshowPopover1({ showPopover1: false });
                   }}
                   //条件要検討
                   disabled={name == null || name === ""}
