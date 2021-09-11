@@ -152,19 +152,22 @@ const Home = ({ history }) => {
             header.push(birthday2);
           }
 
+          let same = false;
           for (const h of header) {
             if (
-              !(
-                h.getMonth() === birthday2.getMonth() &&
-                h.getDate() === birthday2.getDate()
-              )
+              h.getMonth() === birthday2.getMonth() &&
+              h.getDate() === birthday2.getDate()
             ) {
-              header.push(birthday2);
+              same = true;
             }
+          }
+          if (!same) {
+            header.push(birthday2);
           }
         }
       }
     }
+    console.log(header);
 
     const sortedHeader = [...header].sort((a, b) => {
       return a - b;
@@ -217,8 +220,14 @@ const Home = ({ history }) => {
     }
   }
 
+  console.log(birthdayHeaderList);
+
   function addPicture(e) {
-    if (e.target.files[0].size > 3000000) {
+    if (e.target.files[0] === undefined) {
+      return;
+    }
+
+    if (e.target.files[0]?.size > 3000000) {
       setShowFileSizeAlert(true);
       return;
     }
