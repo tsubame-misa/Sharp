@@ -507,7 +507,9 @@ const Home = ({ history }) => {
 
                   <IonButton
                     className="edit-button"
-                    color="white"
+                    //color="white"
+                    fill="clear"
+                    color="dark"
                     onClick={(e) => {
                       e.persist();
                       addModalData(item);

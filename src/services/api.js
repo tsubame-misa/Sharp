@@ -78,7 +78,6 @@ export function deleteStorageImg(name) {
 export async function uploadImg2Storage(name, blob) {
   await firebase.storage().ref().child(`image/${name}`).put(blob);
   var ref = firebase.storage().ref().child(`image/${name}`).put(blob);
-  console.log("upload img ", name);
   const newImageUri = await ref.snapshot.ref.getDownloadURL();
   return newImageUri;
 }
