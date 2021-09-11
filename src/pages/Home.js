@@ -452,7 +452,7 @@ const Home = ({ history }) => {
             );
           })
         ) : (
-          <div class="empty">
+          <div className="empty">
             右下のボタンからプロフィールを
             <br />
             追加しましょう
@@ -476,7 +476,7 @@ const Home = ({ history }) => {
                   onClick={async () => {
                     clearState();
                     setShowModal(false);
-                    setshowPopover1({ showPopover1: false });
+                    setshowPopover1({ showPopover1: false, event: undefined });
                   }}
                 >
                   戻る
@@ -496,7 +496,7 @@ const Home = ({ history }) => {
                     setData(sortedData);
                     setAllData(sortedData);
                     whoIsBirthdayMember(sortedData);
-                    setshowPopover1({ showPopover: false });
+                    setshowPopover1({ showPopover1: false });
                   }}
                   //条件要検討
                   disabled={name == null || name === ""}
@@ -580,13 +580,13 @@ const Home = ({ history }) => {
               {
                 text: "キャンセル",
                 handler: () => {
-                  setshowPopover1({ showPopover1: false });
+                  setshowPopover1({ showPopover1: false, event: undefined });
                 },
               },
               {
                 text: "削除",
                 handler: async () => {
-                  setshowPopover1({ showPopover1: false });
+                  setshowPopover1({ showPopover1: false, event: undefined });
                   await deleteProfile();
                   const data = await getAllData(userId);
                   const sortedData = [...data].sort((a, b) => {
