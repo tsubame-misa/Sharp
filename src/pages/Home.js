@@ -27,6 +27,7 @@ import {
   IonList,
   IonAlert,
   IonItemDivider,
+  IonLoading,
 } from "@ionic/react";
 import {
   addOutline,
@@ -82,6 +83,7 @@ const Home = ({ history }) => {
   const [birthdayMember, setBirthdayMembser] = useState([]);
   const [showBirthdayList, setShowBirthdayList] = useState(true);
   const [birthdayHeaderList, setBirthdayHeaderList] = useState([]);
+  const [showLoading, setShowLoading] = useState(true);
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -558,6 +560,7 @@ const Home = ({ history }) => {
                     await (popoverState1.showPopover1
                       ? updateData()
                       : saveData());
+                    //setShowLoading(true);
                     const data = await getAllData(userId);
                     const sortedData = [...data].sort((a, b) => {
                       return b.created - a.created;
@@ -565,6 +568,7 @@ const Home = ({ history }) => {
                     setData(sortedData);
                     setAllData(sortedData);
                     whoIsBirthdayMember(sortedData);
+                    //setShowLoading(false);
                   }}
                   //条件要検討
                   disabled={name == null || name === ""}
@@ -624,6 +628,12 @@ const Home = ({ history }) => {
           header={""}
           message={"ファイルのサイズは3MB以下にしてください"}
           buttons={["OK"]}
+        />
+        <IonLoading
+          cssClass="my-custom-class"
+          isOpen={showLoading}
+          onDidDismiss={() => setShowLoading(false)}
+          message={"Please wait..."}
         />
       </IonContent>
       <IonPopover
