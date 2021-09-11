@@ -80,6 +80,7 @@ const Home = ({ history }) => {
   const [search, setSearch] = useState(false);
   const [birthdayMember, setBirthdayMembser] = useState([]);
   const [showBirthdayList, setShowBirthdayList] = useState(true);
+  const [birthdayHeaderList, setBirthdayHeaderList] = useState([]);
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -117,9 +118,6 @@ const Home = ({ history }) => {
   }, []);
 
   function whoIsBirthdayMember(data) {
-    //("birthdayMember 10");
-    //console.log(data);
-    //new Date().valueOf();
     const todayAll = getDate();
     const today = new Date();
     today.setFullYear(todayAll.getFullYear());
@@ -127,6 +125,7 @@ const Home = ({ history }) => {
     today.setDate(today.getDate());
 
     const menber = [];
+    const header = [];
 
     for (const item of data) {
       if (item.birthday === null) {
@@ -140,16 +139,40 @@ const Home = ({ history }) => {
         birthday2.setDate(birthday.getDate());
         const diff = birthday2.valueOf() - today.valueOf();
         //TODO:何日範囲がいいか話し合うこと
-        //1msの誤差がバグらせてる可能性あり。誤差の原因不明
+        //1msの誤差がバグらせてる可能性あり。誤差の原因不明。msの制御？
         if (Math.abs(diff) <= 86400000 * 3 + 1) {
+          item.birthdayForCalc = birthday2;
           menber.push(item);
+
+          //TODOリファクタリング
+          if (header.length === 0) {
+            header.push(birthday2);
+          }
+
+          for (const h of header) {
+            if (
+              !(
+                h.getMonth() === birthday2.getMonth() &&
+                h.getDate() === birthday2.getDate()
+              )
+            ) {
+              header.push(birthday2);
+            }
+          }
         }
       }
     }
+
+    const sortedHeader = [...header].sort((a, b) => {
+      return a - b;
+    });
+
     const sortedData = [...menber].sort((a, b) => {
       return new Date(a.birthday) - new Date(b.birthday);
     });
+
     setBirthdayMembser(sortedData);
+    setBirthdayHeaderList(sortedHeader);
   }
 
   const getDate = () => {
@@ -272,6 +295,13 @@ const Home = ({ history }) => {
     return year + "年" + month + "月" + day + "日";
   }
 
+  function date2String(d) {
+    const year = d.getFullYear();
+    const month = `${d.getMonth() + 1}`.padStart(2, "0");
+    const date = `${d.getDate()}`.padStart(2, "0");
+    return `${year}-${month}-${date}`;
+  }
+
   function getBirthdayListDate(date) {
     if (date == null) {
       return "";
@@ -280,6 +310,12 @@ const Home = ({ history }) => {
     const month = date.slice(5, 7);
     const day = date.slice(8, 10);
     return month + "月" + day + "日";
+  }
+
+  function sameDate(header, birthday) {
+    const headerDate = date2String(header).slice(5, 10);
+    const birthdayDate = birthday.slice(5, 10);
+    return headerDate === birthdayDate;
   }
 
   async function deleteProfile() {
@@ -387,26 +423,36 @@ const Home = ({ history }) => {
                 </IonButton>
               </IonItemDivider>
               {showBirthdayList &&
-                birthdayMember.map((item) => {
+                birthdayHeaderList.map((header, id) => {
                   return (
-                    <div key={item.id}>
+                    <div key={id}>
                       {/*TODO:ダブった時にヘッダーが一つになるように */}
                       <IonItemDivider color="light">
-                        {getBirthdayListDate(item.birthday)}
+                        {getBirthdayListDate(date2String(header))}
                       </IonItemDivider>
-                      <IonItem lines="full">
-                        <IonAvatar slot="start">
-                          <img
-                            src={
-                              item.icon_path !== ""
-                                ? item.icon_path
-                                : avatar_first
-                            }
-                            alt="icon birthday"
-                          />
-                        </IonAvatar>
-                        {item.name}
-                      </IonItem>
+                      {birthdayMember.map((item) => {
+                        if (sameDate(header, item.birthday)) {
+                          return (
+                            <div key={item.id}>
+                              <IonItem lines="full">
+                                <IonAvatar slot="start">
+                                  <img
+                                    src={
+                                      item.icon_path !== ""
+                                        ? item.icon_path
+                                        : avatar_first
+                                    }
+                                    alt="icon birthday"
+                                  />
+                                </IonAvatar>
+                                {item.name}
+                              </IonItem>
+                            </div>
+                          );
+                        } else {
+                          return <div></div>;
+                        }
+                      })}
                     </div>
                   );
                 })}
