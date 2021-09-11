@@ -428,6 +428,7 @@ const Home = ({ history }) => {
                 誕生日
                 <IonButton
                   fill="clear"
+                  color="dark"
                   onClick={() => setShowBirthdayList(!showBirthdayList)}
                 >
                   {showBirthdayList ? "閉じる" : "見る"}
