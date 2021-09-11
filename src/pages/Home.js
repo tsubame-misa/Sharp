@@ -167,7 +167,6 @@ const Home = ({ history }) => {
         }
       }
     }
-    console.log(header);
 
     const sortedHeader = [...header].sort((a, b) => {
       return a - b;
@@ -219,8 +218,6 @@ const Home = ({ history }) => {
       console.error(error);
     }
   }
-
-  console.log(birthdayHeaderList);
 
   function addPicture(e) {
     if (e.target.files[0] === undefined) {
