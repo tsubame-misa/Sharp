@@ -184,13 +184,14 @@ const Home = ({ history }) => {
     firebase.auth().signOut();
   }
 
-  async function uploadImg() {
+  async function uploadImg(first) {
     if (img === "") {
       return "";
     }
 
     try {
       //画像変更なしの場合
+      console.log(imgName, preImgName);
       if (imgName === preImgName) {
         return img;
       }
@@ -202,7 +203,7 @@ const Home = ({ history }) => {
       const blob = await response.blob();
 
       const newImageUri = await uploadImg2Storage(
-        preImgName === "" ? imgName : preImgName,
+        first || imgName !== preImgName ? imgName : preImgName,
         blob
       );
 
@@ -229,7 +230,7 @@ const Home = ({ history }) => {
       memo: text,
       created: getDate(),
       id: new Date().getTime().toString(),
-      icon_path: await uploadImg(),
+      icon_path: await uploadImg(true),
       icon_name: imgName,
     };
 
@@ -239,15 +240,18 @@ const Home = ({ history }) => {
   }
 
   async function updateData() {
+    const path = await uploadImg(false);
     const newData = {
       name: name,
       birthday: selectedDate,
       memo: text,
       created: getDate(),
       id: ID === null ? new Date().getTime().toString() : ID,
-      icon_path: await uploadImg(),
+      icon_path: path !== undefined ? path : "",
       icon_name: imgName,
     };
+
+    console.log(newData);
 
     const allData = data.map((item) => {
       if (item.id === newData.id) {
@@ -367,6 +371,8 @@ const Home = ({ history }) => {
     return <Guide modal={true} />;
   }
 
+  console.log(data);
+
   return (
     <IonPage>
       <IonHeader>
@@ -450,7 +456,7 @@ const Home = ({ history }) => {
                             </div>
                           );
                         } else {
-                          return <div></div>;
+                          return <div key={item.id}></div>;
                         }
                       })}
                     </div>
