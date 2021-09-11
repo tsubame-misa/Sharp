@@ -83,7 +83,7 @@ const Home = ({ history }) => {
   const [birthdayMember, setBirthdayMembser] = useState([]);
   const [showBirthdayList, setShowBirthdayList] = useState(true);
   const [birthdayHeaderList, setBirthdayHeaderList] = useState([]);
-  const [showLoading, setShowLoading] = useState(true);
+  const [showLoading, setShowLoading] = useState(false);
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -194,7 +194,7 @@ const Home = ({ history }) => {
 
     try {
       //画像変更なしの場合
-      console.log(imgName, preImgName);
+      // console.log(imgName, preImgName);
       if (imgName === preImgName) {
         return img;
       }
