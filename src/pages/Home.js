@@ -123,8 +123,6 @@ const Home = ({ history }) => {
     today.setFullYear(todayAll.getFullYear());
     today.setMonth(today.getMonth());
     today.setDate(today.getDate());
-    today.setHours("00");
-    today.setMinutes("00");
 
     const menber = [];
 
@@ -138,12 +136,10 @@ const Home = ({ history }) => {
         birthday2.setFullYear(todayAll.getFullYear() + i);
         birthday2.setMonth(birthday.getMonth());
         birthday2.setDate(birthday.getDate());
-        birthday2.setHours("00");
-        birthday2.setMinutes("00");
         const diff = birthday2.valueOf() - today.valueOf();
         //TODO:何日範囲がいいか話し合うこと
         //1msの誤差がバグらせてる可能性あり。誤差の原因不明
-        if (Math.abs(diff) <= 86400000 * 3) {
+        if (Math.abs(diff) <= 86400000 * 3 + 1) {
           menber.push(item);
         }
       }
