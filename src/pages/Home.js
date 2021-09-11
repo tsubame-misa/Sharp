@@ -33,6 +33,8 @@ import {
   cameraOutline,
   ellipsisHorizontal,
   menuOutline,
+  eyeOutline,
+  eyeOffOutline,
 } from "ionicons/icons";
 import "./Home.css";
 import firebase from "../firebase";
@@ -378,6 +380,10 @@ const Home = ({ history }) => {
                   onClick={() => setShowBirthdayList(!showBirthdayList)}
                 >
                   {showBirthdayList ? "閉じる" : "見る"}
+                  {/**IconでStateを表示した方がいい？*/}
+                  {/*<IonIcon
+                    icon={showBirthdayList ? eyeOffOutline : eyeOutline}
+                  />*/}
                 </IonButton>
               </IonItemDivider>
               {showBirthdayList &&
