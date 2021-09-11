@@ -77,6 +77,7 @@ const Home = ({ history }) => {
   const [userId, setUserId] = useState(null);
   const [firstLogined, setFirstLogined] = useState(getVisited());
   const [showAlert, setShowAlert] = useState(false);
+  const [showFileSizeAlert, setShowFileSizeAlert] = useState(false);
   const [search, setSearch] = useState(false);
   const [birthdayMember, setBirthdayMembser] = useState([]);
   const [showBirthdayList, setShowBirthdayList] = useState(true);
@@ -215,6 +216,10 @@ const Home = ({ history }) => {
   }
 
   function addPicture(e) {
+    if (e.target.files[0].size > 3000000) {
+      setShowFileSizeAlert(true);
+      return;
+    }
     const reader = new window.FileReader();
     reader.onload = (event) => {
       setImg(event.target.result);
@@ -250,8 +255,6 @@ const Home = ({ history }) => {
       icon_path: path !== undefined ? path : "",
       icon_name: imgName,
     };
-
-    console.log(newData);
 
     const allData = data.map((item) => {
       if (item.id === newData.id) {
@@ -616,6 +619,14 @@ const Home = ({ history }) => {
             ></IonTextarea>
           </IonItem>
         </IonModal>
+        <IonAlert
+          isOpen={showFileSizeAlert}
+          onDidDismiss={() => setShowFileSizeAlert(false)}
+          cssClass="my-custom-class"
+          header={""}
+          message={"ファイルのサイズは3MB以下にしてください"}
+          buttons={["OK"]}
+        />
       </IonContent>
       <IonPopover
         cssClass="my-custom-class"
