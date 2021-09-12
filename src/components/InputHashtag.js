@@ -5,10 +5,11 @@ import { closeOutline } from "ionicons/icons";
 
 const InputHashtag = ({ tags, setTags }) => {
   //const [tags, setTags] = useState([]);
-  const [hashtag, setHashTag] = useState("#大学 #先輩");
+  const [hashtag, setHashTag] = useState("#大学");
+  const [focused, setFocused] = useState(false);
 
   function addHashTag() {
-    if (hashtag === "" || hashtag === "#") {
+    if (hashtag === "" || hashtag === "#" || !focused) {
       return;
     }
 
@@ -18,7 +19,8 @@ const InputHashtag = ({ tags, setTags }) => {
       id: new Date().getTime().toString(),
     });
     setTags(newPrograms);
-    setHashTag("#大学 #先輩");
+    setFocused(false);
+    setHashTag("#大学");
   }
 
   function deleteTag(id) {
@@ -47,6 +49,7 @@ const InputHashtag = ({ tags, setTags }) => {
             className="textlines"
             value={hashtag}
             onChange={(e) => {
+              setFocused(true);
               if (e.target.value[0] === "#") {
                 setHashTag(e.target.value);
               } else {
