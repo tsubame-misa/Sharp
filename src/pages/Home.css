@@ -120,8 +120,9 @@ ion-button.edit-button {
   text-align: center;
 }
 
-ion-content {
-  /*--background: "#000000";*/
+.tag-group {
+  display: flex;
+  flex-direction: column;
 }
 
 .ion-color-favorite {

@@ -640,7 +640,13 @@ const Home = ({ history }) => {
               onIonChange={(e) => setSelectedDate(e.detail.value)}
             ></IonDatetime>
           </IonItem>
-          <InputHashtag />
+          <IonItem>
+            <IonLabel position="stacked" style={{ fontSize: "1.1rem" }}>
+              タグ
+            </IonLabel>
+            <InputHashtag />
+          </IonItem>
+
           <IonItem>
             <IonLabel position="floating">タグ</IonLabel>
             <IonTextarea
