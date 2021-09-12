@@ -681,16 +681,6 @@ const Home = ({ history }) => {
             </IonLabel>
             <InputHashtag tags={tags} setTags={setTags} />
           </IonItem>
-
-          <IonItem>
-            <IonLabel position="floating">タグ</IonLabel>
-            <IonTextarea
-              rows={5}
-              placeholder="例．＃大学　＃先輩"
-              value={text}
-              onIonChange={(e) => setText(e.detail.value)}
-            ></IonTextarea>
-          </IonItem>
         </IonModal>
         <IonAlert
           isOpen={showFileSizeAlert}
