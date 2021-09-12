@@ -27,8 +27,16 @@ import {
   IonList,
   IonAlert,
   IonItemDivider,
+  IonLoading,
 } from "@ionic/react";
-import { addOutline, cameraOutline, ellipsisHorizontal } from "ionicons/icons";
+import {
+  addOutline,
+  cameraOutline,
+  ellipsisHorizontal,
+  menuOutline,
+  eyeOutline,
+  eyeOffOutline,
+} from "ionicons/icons";
 import "./Home.css";
 import firebase from "../firebase";
 import Guide from "./Guide";
@@ -70,8 +78,12 @@ const Home = ({ history }) => {
   const [userId, setUserId] = useState(null);
   const [firstLogined, setFirstLogined] = useState(getVisited());
   const [showAlert, setShowAlert] = useState(false);
+  const [showFileSizeAlert, setShowFileSizeAlert] = useState(false);
   const [search, setSearch] = useState(false);
   const [birthdayMember, setBirthdayMembser] = useState([]);
+  const [showBirthdayList, setShowBirthdayList] = useState(true);
+  const [birthdayHeaderList, setBirthdayHeaderList] = useState([]);
+  const [showLoading, setShowLoading] = useState(false);
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -90,9 +102,14 @@ const Home = ({ history }) => {
           if (responce === undefined) {
             return;
           }
-          setAllData(responce.data);
-          setData(responce.data);
-          whoIsBirthdayMember(responce.data);
+          const data = responce.data;
+          const sortedData = [...data].sort((a, b) => {
+            return b.created - a.created;
+          });
+
+          setAllData(sortedData);
+          setData(sortedData);
+          whoIsBirthdayMember(sortedData);
         });
     });
   });
@@ -104,9 +121,6 @@ const Home = ({ history }) => {
   }, []);
 
   function whoIsBirthdayMember(data) {
-    //("birthdayMember 10");
-    //console.log(data);
-    //new Date().valueOf();
     const todayAll = getDate();
     const today = new Date();
     today.setFullYear(todayAll.getFullYear());
@@ -114,6 +128,7 @@ const Home = ({ history }) => {
     today.setDate(today.getDate());
 
     const menber = [];
+    const header = [];
 
     for (const item of data) {
       if (item.birthday === null) {
@@ -127,13 +142,42 @@ const Home = ({ history }) => {
         birthday2.setDate(birthday.getDate());
         const diff = birthday2.valueOf() - today.valueOf();
         //TODO:何日範囲がいいか話し合うこと
-        if (Math.abs(diff) <= 86400000 * 3) {
+        //1msの誤差がバグらせてる可能性あり。誤差の原因不明。msの制御？
+        if (Math.abs(diff) <= 86400000 * 3 + 1) {
+          item.birthdayForCalc = birthday2;
           menber.push(item);
+
+          //TODOリファクタリング
+          if (header.length === 0) {
+            header.push(birthday2);
+          }
+
+          let same = false;
+          for (const h of header) {
+            if (
+              h.getMonth() === birthday2.getMonth() &&
+              h.getDate() === birthday2.getDate()
+            ) {
+              same = true;
+            }
+          }
+          if (!same) {
+            header.push(birthday2);
+          }
         }
       }
     }
 
-    setBirthdayMembser(menber);
+    const sortedHeader = [...header].sort((a, b) => {
+      return a - b;
+    });
+
+    const sortedData = [...menber].sort((a, b) => {
+      return new Date(a.birthday) - new Date(b.birthday);
+    });
+
+    setBirthdayMembser(sortedData);
+    setBirthdayHeaderList(sortedHeader);
   }
 
   const getDate = () => {
@@ -145,13 +189,14 @@ const Home = ({ history }) => {
     firebase.auth().signOut();
   }
 
-  async function uploadImg() {
+  async function uploadImg(first) {
     if (img === "") {
       return "";
     }
 
     try {
       //画像変更なしの場合
+      // console.log(imgName, preImgName);
       if (imgName === preImgName) {
         return img;
       }
@@ -163,7 +208,7 @@ const Home = ({ history }) => {
       const blob = await response.blob();
 
       const newImageUri = await uploadImg2Storage(
-        preImgName === "" ? imgName : preImgName,
+        first || imgName !== preImgName ? imgName : preImgName,
         blob
       );
 
@@ -175,6 +220,14 @@ const Home = ({ history }) => {
   }
 
   function addPicture(e) {
+    if (e.target.files[0] === undefined) {
+      return;
+    }
+
+    if (e.target.files[0]?.size > 3000000) {
+      setShowFileSizeAlert(true);
+      return;
+    }
     const reader = new window.FileReader();
     reader.onload = (event) => {
       setImg(event.target.result);
@@ -190,7 +243,7 @@ const Home = ({ history }) => {
       memo: text,
       created: getDate(),
       id: new Date().getTime().toString(),
-      icon_path: await uploadImg(),
+      icon_path: await uploadImg(true),
       icon_name: imgName,
     };
 
@@ -200,13 +253,14 @@ const Home = ({ history }) => {
   }
 
   async function updateData() {
+    const path = await uploadImg(false);
     const newData = {
       name: name,
       birthday: selectedDate,
       memo: text,
       created: getDate(),
       id: ID === null ? new Date().getTime().toString() : ID,
-      icon_path: await uploadImg(),
+      icon_path: path !== undefined ? path : "",
       icon_name: imgName,
     };
 
@@ -256,6 +310,13 @@ const Home = ({ history }) => {
     return year + "年" + month + "月" + day + "日";
   }
 
+  function date2String(d) {
+    const year = d.getFullYear();
+    const month = `${d.getMonth() + 1}`.padStart(2, "0");
+    const date = `${d.getDate()}`.padStart(2, "0");
+    return `${year}-${month}-${date}`;
+  }
+
   function getBirthdayListDate(date) {
     if (date == null) {
       return "";
@@ -266,8 +327,14 @@ const Home = ({ history }) => {
     return month + "月" + day + "日";
   }
 
+  function sameDate(header, birthday) {
+    const headerDate = date2String(header).slice(5, 10);
+    const birthdayDate = birthday.slice(5, 10);
+    return headerDate === birthdayDate;
+  }
+
   async function deleteProfile() {
-    const deletedData = data.filter((item) => item.id !== ID);
+    const deletedData = allStorageData.filter((item) => item.id !== ID);
     await updateData2DB(deletedData, userId);
     if (preImgName !== "") {
       await deleteStorageImg(preImgName);
@@ -333,7 +400,7 @@ const Home = ({ history }) => {
               slot="icon-only"
               size="large"
               color="light"
-              icon={ellipsisHorizontal}
+              icon={menuOutline}
             ></IonIcon>
           </IonButton>
         </IonToolbar>
@@ -354,87 +421,131 @@ const Home = ({ history }) => {
           }}
         ></IonSearchbar>
 
-        {birthdayMember.length !== 0 && (
+        {birthdayMember.length !== 0 && searchText === "" && (
           <div>
             <IonList>
-              <IonItemDivider color="medium">誕生日</IonItemDivider>
-              {birthdayMember.map((item) => {
-                return (
-                  <div>
-                    {/*TODO:ダブった時にヘッダーが一つになるように */}
-                    <IonItemDivider color="light">
-                      {getBirthdayListDate(item.birthday)}
-                    </IonItemDivider>
-                    <IonItem lines="full">
-                      <IonAvatar slot="start">
+              <IonItemDivider color="medium">
+                誕生日
+                <IonButton
+                  fill="clear"
+                  color="dark"
+                  onClick={() => setShowBirthdayList(!showBirthdayList)}
+                >
+                  {showBirthdayList ? "閉じる" : "見る"}
+                  {/**IconでStateを表示した方がいい？*/}
+                  {/*<IonIcon
+                    icon={showBirthdayList ? eyeOffOutline : eyeOutline}
+                  />*/}
+                </IonButton>
+              </IonItemDivider>
+              {showBirthdayList &&
+                birthdayHeaderList.map((header, id) => {
+                  return (
+                    <div key={id}>
+                      {/*TODO:ダブった時にヘッダーが一つになるように */}
+                      <IonItemDivider color="light">
+                        {getBirthdayListDate(date2String(header))}
+                      </IonItemDivider>
+                      {birthdayMember.map((item) => {
+                        if (sameDate(header, item.birthday)) {
+                          return (
+                            <div key={item.id}>
+                              <IonItem lines="full">
+                                <IonAvatar slot="start">
+                                  <img
+                                    src={
+                                      item.icon_path !== ""
+                                        ? item.icon_path
+                                        : avatar_first
+                                    }
+                                    alt="icon birthday"
+                                  />
+                                </IonAvatar>
+                                {item.name}
+                              </IonItem>
+                            </div>
+                          );
+                        } else {
+                          return <div key={item.id}></div>;
+                        }
+                      })}
+                    </div>
+                  );
+                })}
+            </IonList>
+            <IonItemDivider color="medium" style={{ marginTop: "40px" }}>
+              メンバー
+            </IonItemDivider>
+          </div>
+        )}
+
+        {data.length !== 0 ? (
+          data.map((item) => {
+            return (
+              <IonCard className="card" key={item.id}>
+                <IonCardHeader className="cardHeader">
+                  <div className="person">
+                    <div className="avatar">
+                      <IonAvatar className="avatar-ionic">
                         <img
                           src={
                             item.icon_path !== ""
                               ? item.icon_path
                               : avatar_first
                           }
-                          alt="icon birthday"
+                          alt="icon"
                         />
                       </IonAvatar>
-                      {item.name}
-                    </IonItem>
+                    </div>
+                    <div className="titles">
+                      <IonCardTitle className="title">{item.name}</IonCardTitle>
+                      <IonCardSubtitle className="sub-title">
+                        {getDisplayDate(item.birthday)}
+                      </IonCardSubtitle>
+                    </div>
                   </div>
-                );
-              })}
-            </IonList>
-            <IonItemDivider color="medium" style={{ marginTop: "40px" }}>
-              {" "}
-              メンバー
-            </IonItemDivider>
+
+                  <IonButton
+                    className="edit-button"
+                    //color="white"
+                    fill="clear"
+                    color="dark"
+                    onClick={(e) => {
+                      e.persist();
+                      setshowPopover1({
+                        showPopover1: true,
+                        event: e,
+                        item: item,
+                      });
+                    }}
+                  >
+                    <IonIcon
+                      slot="icon-only"
+                      size="default"
+                      icon={ellipsisHorizontal}
+                    ></IonIcon>
+                  </IonButton>
+                </IonCardHeader>
+                　　
+                <IonCardContent className="cardContent">
+                  <div className="memo">{item.memo}</div>
+                </IonCardContent>
+              </IonCard>
+            );
+          })
+        ) : (
+          <div className="empty">
+            {searchText === "" ? (
+              <div>
+                右下のボタンからプロフィールを
+                <br />
+                追加しましょう
+              </div>
+            ) : (
+              <div>一致する検索結果はありません</div>
+            )}
           </div>
         )}
-
-        {data.map((item) => {
-          return (
-            <IonCard className="card" key={item.id}>
-              <IonCardHeader className="cardHeader">
-                <div className="person">
-                  <div className="avatar">
-                    <IonAvatar>
-                      <img
-                        src={
-                          item.icon_path !== "" ? item.icon_path : avatar_first
-                        }
-                        alt="icon"
-                      />
-                    </IonAvatar>
-                  </div>
-                  <div className="titles">
-                    <IonCardTitle className="title">{item.name}</IonCardTitle>
-                    <IonCardSubtitle className="sub-title">
-                      {getDisplayDate(item.birthday)}
-                    </IonCardSubtitle>
-                  </div>
-                </div>
-
-                <IonButton
-                  className="edit-button"
-                  color="white"
-                  onClick={(e) => {
-                    e.persist();
-                    addModalData(item);
-                    setshowPopover1({ showPopover1: true, event: e });
-                  }}
-                >
-                  <IonIcon
-                    slot="icon-only"
-                    size="default"
-                    icon={ellipsisHorizontal}
-                  ></IonIcon>
-                </IonButton>
-              </IonCardHeader>
-              　　
-              <IonCardContent className="cardContent">
-                <div className="memo">{item.memo}</div>
-              </IonCardContent>
-            </IonCard>
-          );
-        })}
 
         {/*右下のボタン*/}
         <IonFab vertical="bottom" horizontal="end" slot="fixed" id={"test"}>
@@ -453,7 +564,7 @@ const Home = ({ history }) => {
                   onClick={async () => {
                     clearState();
                     setShowModal(false);
-                    setshowPopover1({ showPopover1: false });
+                    setshowPopover1({ showPopover1: false, event: undefined });
                   }}
                 >
                   戻る
@@ -463,13 +574,19 @@ const Home = ({ history }) => {
                 <IonButton
                   onClick={async () => {
                     setShowModal(false);
+                    setshowPopover1({ showPopover1: false });
                     await (popoverState1.showPopover1
                       ? updateData()
                       : saveData());
+                    //setShowLoading(true);
                     const data = await getAllData(userId);
-                    setData(data);
-                    setAllData(data);
-                    setshowPopover1({ showPopover1: false });
+                    const sortedData = [...data].sort((a, b) => {
+                      return b.created - a.created;
+                    });
+                    setData(sortedData);
+                    setAllData(sortedData);
+                    whoIsBirthdayMember(sortedData);
+                    //setShowLoading(false);
                   }}
                   //条件要検討
                   disabled={name == null || name === ""}
@@ -522,6 +639,20 @@ const Home = ({ history }) => {
             ></IonTextarea>
           </IonItem>
         </IonModal>
+        <IonAlert
+          isOpen={showFileSizeAlert}
+          onDidDismiss={() => setShowFileSizeAlert(false)}
+          cssClass="my-custom-class"
+          header={""}
+          message={"ファイルのサイズは3MB以下にしてください"}
+          buttons={["OK"]}
+        />
+        <IonLoading
+          cssClass="my-custom-class"
+          isOpen={showLoading}
+          onDidDismiss={() => setShowLoading(false)}
+          message={"Please wait..."}
+        />
       </IonContent>
       <IonPopover
         cssClass="my-custom-class"
@@ -532,13 +663,22 @@ const Home = ({ history }) => {
         }
       >
         <IonList>
-          <IonItem onClick={() => setShowModal(true)}>編集</IonItem>
           <IonItem
+            lines="full"
+            onClick={() => {
+              addModalData(popoverState1.item);
+              setShowModal(true);
+            }}
+          >
+            編集する
+          </IonItem>
+          <IonItem
+            lines="none"
             onClick={async () => {
               setShowAlert(true);
             }}
           >
-            削除
+            削除する
           </IonItem>
           <IonAlert
             isOpen={showAlert}
@@ -550,17 +690,22 @@ const Home = ({ history }) => {
               {
                 text: "キャンセル",
                 handler: () => {
-                  setshowPopover1({ showPopover1: false });
+                  setshowPopover1({ showPopover1: false, event: undefined });
                 },
               },
               {
                 text: "削除",
                 handler: async () => {
-                  setshowPopover1({ showPopover1: false });
+                  setshowPopover1({ showPopover1: false, event: undefined });
                   await deleteProfile();
                   const data = await getAllData(userId);
-                  setData(data);
-                  setAllData(data);
+                  const sortedData = [...data].sort((a, b) => {
+                    return b.created - a.created;
+                  });
+                  setData(sortedData);
+                  setAllData(sortedData);
+                  whoIsBirthdayMember(sortedData);
+                  SearchData(true, searchText);
                 },
               },
             ]}
@@ -576,10 +721,14 @@ const Home = ({ history }) => {
         }
       >
         <IonList>
-          <IonItem onClick={() => logout()}>ログアウト</IonItem>
+          <IonItem lines="full" onClick={() => logout()}>
+            ログアウト
+          </IonItem>
           <IonItem
+            lines="none"
             onClick={() => {
               history.push("/setting/Guide");
+              setshowPopover2({ showPopover2: false });
             }}
           >
             ガイド

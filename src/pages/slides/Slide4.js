@@ -1,40 +1,18 @@
-import { IonSlide, IonButton } from "@ionic/react";
+import { IonSlide } from "@ionic/react";
+import img from "../../images/birthday.png";
+import "./Slide.css";
 
 const Slide4 = () => {
-  //TODO直した方がいい
-  function logined() {
-    if ("visited" in localStorage) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  function setVisited() {
-    if (!logined()) {
-      localStorage.setItem("visited", "1");
-      window.dispatchEvent(new StorageEvent("storage"));
-    }
-  }
-
   return (
     <IonSlide>
-      <div className="center_m5">
-        <p>
-          まずは既に知っている人を
-          <br />
-          登録してみましょう！
-        </p>
-        <IonButton
-          //routerLink={"/home"}
-          fill="outline"
-          size="large"
-          onClick={() => {
-            setVisited();
-          }}
-        >
-          はじめる
-        </IonButton>
+      <div>
+        <div>
+          <img className="logo" src={img} alt="ロゴ画像" />
+          <div className="position">
+            <div className="guide-title">#誕生日</div>
+            <p>誕生日が近い人を確認する</p>
+          </div>
+        </div>
       </div>
     </IonSlide>
   );

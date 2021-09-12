@@ -32,7 +32,7 @@ const Login = () => {
 
   return (
     <IonPage>
-      <IonContent color="dark">
+      <IonContent color="favorite">
         <div className="loginpageAll">
           <div className="image">
             <img src={icon} width="80%" height="80%" alt=""></img>

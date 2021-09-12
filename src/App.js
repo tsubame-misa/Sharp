@@ -34,22 +34,18 @@ const App = () => {
     firebase.auth().onAuthStateChanged((user) => {
       setIsSignedIn(!!user);
     });
-  }, [isSignedIn]);
+  }, []);
 
   return (
     <IonApp>
       <IonReactRouter>
         {isSignedIn ? (
           <IonRouterOutlet>
-            <Route exact path="/home">
-              <Home />
-            </Route>
+            <Route exact path="/home" component={Home} />
             <Route exact path="/">
               <Redirect to="/home" />
             </Route>
-            <Route exact path="/setting/Guide">
-              <Guide />
-            </Route>
+            <Route exact path="/setting/Guide" component={Guide} />
           </IonRouterOutlet>
         ) : (
           <Login />

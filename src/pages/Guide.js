@@ -8,7 +8,7 @@ import {
   IonTitle,
   IonButtons,
 } from "@ionic/react";
-import { Slide0, Slide1, Slide2, Slide3, Slide4 } from "./slides";
+import { Slide0, Slide1, Slide2, Slide3, Slide4, Slide5 } from "./slides";
 import "../pages/Home.css";
 
 const Guide = ({ modal, history }) => {
@@ -26,7 +26,12 @@ const Guide = ({ modal, history }) => {
           </IonToolbar>
         </IonHeader>
       )}
-      <IonContent fullscreen class="ion-padding" scroll-y="false">
+      <IonContent
+        fullscreen
+        class="ion-padding"
+        scroll-y="false"
+        color="favorite"
+      >
         <IonSlides
           pager={true}
           options={{ initialSlide: 0 }}
@@ -36,7 +41,8 @@ const Guide = ({ modal, history }) => {
           <Slide1 />
           <Slide2 />
           <Slide3 />
-          {modal ? <Slide4 /> : []}
+          <Slide4 />
+          {modal ? <Slide5 /> : []}
         </IonSlides>
       </IonContent>
     </IonPage>
