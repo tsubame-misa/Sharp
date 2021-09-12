@@ -1,16 +1,7 @@
 import { useState } from "react";
-import {
-  IonInput,
-  IonButton,
-  IonItem,
-  IonItemOption,
-  IonItemOptions,
-  IonItemSliding,
-  IonIcon,
-} from "@ionic/react";
+import { IonIcon } from "@ionic/react";
 import "./InputHashtag.css";
 import { closeOutline } from "ionicons/icons";
-import { deleteStorageImg } from "../services/api";
 
 const InputHashtag = () => {
   const [tags, setTags] = useState([]);
@@ -39,25 +30,29 @@ const InputHashtag = () => {
         {tags?.map((item) => {
           return (
             <div className="hashtag" key={item.id}>
-              <div>{item.name}</div>
+              <div>
+                <label>{item.name}</label>
+              </div>
               <button onClick={() => deleteTag(item.id)}>
                 <IonIcon icon={closeOutline} />
               </button>
             </div>
           );
         })}
-      </div>
-      <div>
-        <input
-          value={hashtag}
-          onChange={(e) => {
-            setHashTag(e.target.value);
-          }}
-          onBlur={() => {
-            addHashTag();
-          }}
-        />
-        <button onClick={() => addHashTag()}>ok</button>
+
+        <div>
+          &ensp;
+          <input
+            value={hashtag}
+            onChange={(e) => {
+              setHashTag(e.target.value);
+            }}
+            onBlur={() => {
+              addHashTag();
+            }}
+          />
+          <button onClick={() => addHashTag()}>ok</button>
+        </div>
       </div>
     </div>
   );
