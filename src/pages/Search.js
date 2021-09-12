@@ -55,14 +55,9 @@ function getVisited() {
   return !!parseInt(v, 10);
 }
 
-const Home = ({ history }) => {
+const Search = ({ history }) => {
   const [allStorageData, setAllData] = useState([]);
   const [data, setData] = useState([]);
-  function setData_(v) {
-    /*console.log("setData_");
-    console.trace();*/
-    setData(v);
-  }
   const [img, setImg] = useState("");
   const [imgName, setImgName] = useState("");
   const [preImgName, setPreImgName] = useState("");
@@ -113,7 +108,7 @@ const Home = ({ history }) => {
           });
 
           setAllData(sortedData);
-          setData_(sortedData);
+          setData(sortedData);
           whoIsBirthdayMember(sortedData);
         });
     });
@@ -365,34 +360,27 @@ const Home = ({ history }) => {
     return 0;
   }
 
-  async function canselSearch() {
-    setSearch(!search);
-    setData_(allStorageData);
-  }
-
-  async function searchProfile(word, profiles) {
-    if (word === "" || word === undefined) {
+  async function SearchData(search, word) {
+    if (!search || word === "" || word === undefined) {
       setSearch(!search);
-      setData_(profiles);
+      setData(allStorageData);
       return;
     }
 
-    const newData = profiles.filter((item) =>
+    const newData = allStorageData.filter((item) =>
       findWord(item.memo + " " + item.name, word)
     );
 
     if (newData.length > 0) {
-      setData_(newData);
+      setData(newData);
       return;
     }
-    setData_([]);
+    setData([]);
   }
 
   if (!firstLogined) {
     return <Guide modal={true} />;
   }
-
-  //console.log("data", JSON.parse(JSON.stringify(data)));
 
   return (
     <IonPage>
@@ -421,71 +409,13 @@ const Home = ({ history }) => {
           showCancelButton="focus"
           placeholder="検索"
           cancelButtonText="キャンセル"
-          onIonCancel={() => canselSearch()}
+          onIonCancel={() => SearchData(false)}
           onIonChange={(e) => {
             setSearchText(e.target.value);
             setSearch(!search);
-            searchProfile(e.detail.value, allStorageData);
+            SearchData(true, e.detail.value);
           }}
         ></IonSearchbar>
-
-        {birthdayMember.length !== 0 && searchText === "" && (
-          <div>
-            <IonList>
-              <IonItemDivider color="medium">
-                誕生日
-                <IonButton
-                  fill="clear"
-                  color="dark"
-                  onClick={() => setShowBirthdayList(!showBirthdayList)}
-                >
-                  {showBirthdayList ? "閉じる" : "見る"}
-                  {/**IconでStateを表示した方がいい？*/}
-                  {/*<IonIcon
-                    icon={showBirthdayList ? eyeOffOutline : eyeOutline}
-                  />*/}
-                </IonButton>
-              </IonItemDivider>
-              {showBirthdayList &&
-                birthdayHeaderList.map((header, id) => {
-                  return (
-                    <div key={id}>
-                      {/*TODO:ダブった時にヘッダーが一つになるように */}
-                      <IonItemDivider color="light">
-                        {getBirthdayListDate(date2String(header))}
-                      </IonItemDivider>
-                      {birthdayMember.map((item) => {
-                        if (sameDate(header, item.birthday)) {
-                          return (
-                            <div key={item.id}>
-                              <IonItem lines="full">
-                                <IonAvatar slot="start">
-                                  <img
-                                    src={
-                                      item.icon_path !== ""
-                                        ? item.icon_path
-                                        : avatar_first
-                                    }
-                                    alt="icon birthday"
-                                  />
-                                </IonAvatar>
-                                {item.name}
-                              </IonItem>
-                            </div>
-                          );
-                        } else {
-                          return <div key={item.id}></div>;
-                        }
-                      })}
-                    </div>
-                  );
-                })}
-            </IonList>
-            <IonItemDivider color="medium" style={{ marginTop: "40px" }}>
-              メンバー
-            </IonItemDivider>
-          </div>
-        )}
 
         {data.length !== 0 ? (
           data.map((item) => {
@@ -520,7 +450,6 @@ const Home = ({ history }) => {
                     color="dark"
                     onClick={(e) => {
                       e.persist();
-                      setID(item.id);
                       setshowPopover1({
                         showPopover1: true,
                         event: e,
@@ -543,25 +472,8 @@ const Home = ({ history }) => {
             );
           })
         ) : (
-          <div className="empty">
-            {searchText === "" ? (
-              <div>
-                右下のボタンからプロフィールを
-                <br />
-                追加しましょう
-              </div>
-            ) : (
-              <div>一致する検索結果はありません</div>
-            )}
-          </div>
+          <div className="empty">一致する検索結果はありません</div>
         )}
-
-        {/*右下のボタン*/}
-        <IonFab vertical="bottom" horizontal="end" slot="fixed" id={"test"}>
-          <IonFabButton color="dark" onClick={() => setShowModal(true)}>
-            <IonIcon icon={addOutline} size="20px" />
-          </IonFabButton>
-        </IonFab>
 
         {/*モーダル*/}
         <IonModal isOpen={showModal} cssClass="my-custom-class">
@@ -573,6 +485,7 @@ const Home = ({ history }) => {
                   onClick={async () => {
                     clearState();
                     setShowModal(false);
+                    setshowPopover1({ showPopover1: false, event: undefined });
                   }}
                 >
                   戻る
@@ -591,7 +504,7 @@ const Home = ({ history }) => {
                     const sortedData = [...data].sort((a, b) => {
                       return b.created - a.created;
                     });
-                    setData_(sortedData);
+                    setData(sortedData);
                     setAllData(sortedData);
                     whoIsBirthdayMember(sortedData);
                     //setShowLoading(false);
@@ -704,16 +617,16 @@ const Home = ({ history }) => {
               {
                 text: "削除",
                 handler: async () => {
+                  setshowPopover1({ showPopover1: false, event: undefined });
                   await deleteProfile();
                   const data = await getAllData(userId);
-
-                  const profiles = [...data].sort((a, b) => {
+                  const sortedData = [...data].sort((a, b) => {
                     return b.created - a.created;
                   });
-                  setAllData(profiles);
-                  whoIsBirthdayMember(profiles);
-                  searchProfile(searchText, profiles);
-                  setshowPopover1({ showPopover1: false, event: undefined });
+                  setData(sortedData);
+                  setAllData(sortedData);
+                  whoIsBirthdayMember(sortedData);
+                  SearchData(true, searchText);
                 },
               },
             ]}
@@ -747,4 +660,4 @@ const Home = ({ history }) => {
   );
 };
 
-export default Home;
+export default Search;
