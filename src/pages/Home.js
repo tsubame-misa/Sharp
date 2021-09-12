@@ -512,8 +512,11 @@ const Home = ({ history }) => {
                     color="dark"
                     onClick={(e) => {
                       e.persist();
-                      addModalData(item);
-                      setshowPopover1({ showPopover1: true, event: e });
+                      setshowPopover1({
+                        showPopover1: true,
+                        event: e,
+                        item: item,
+                      });
                     }}
                   >
                     <IonIcon
@@ -660,7 +663,13 @@ const Home = ({ history }) => {
         }
       >
         <IonList>
-          <IonItem lines="full" onClick={() => setShowModal(true)}>
+          <IonItem
+            lines="full"
+            onClick={() => {
+              addModalData(popoverState1.item);
+              setShowModal(true);
+            }}
+          >
             編集する
           </IonItem>
           <IonItem
