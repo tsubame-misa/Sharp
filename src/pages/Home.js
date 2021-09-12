@@ -334,7 +334,7 @@ const Home = ({ history }) => {
   }
 
   async function deleteProfile() {
-    const deletedData = data.filter((item) => item.id !== ID);
+    const deletedData = allStorageData.filter((item) => item.id !== ID);
     await updateData2DB(deletedData, userId);
     if (preImgName !== "") {
       await deleteStorageImg(preImgName);
@@ -421,7 +421,7 @@ const Home = ({ history }) => {
           }}
         ></IonSearchbar>
 
-        {birthdayMember.length !== 0 && (
+        {birthdayMember.length !== 0 && searchText === "" && (
           <div>
             <IonList>
               <IonItemDivider color="medium">
@@ -532,9 +532,15 @@ const Home = ({ history }) => {
           })
         ) : (
           <div className="empty">
-            右下のボタンからプロフィールを
-            <br />
-            追加しましょう
+            {searchText === "" ? (
+              <div>
+                右下のボタンからプロフィールを
+                <br />
+                追加しましょう
+              </div>
+            ) : (
+              <div>一致する検索結果はありません</div>
+            )}
           </div>
         )}
 
@@ -690,6 +696,7 @@ const Home = ({ history }) => {
                   setData(sortedData);
                   setAllData(sortedData);
                   whoIsBirthdayMember(sortedData);
+                  SearchData(true, searchText);
                 },
               },
             ]}
