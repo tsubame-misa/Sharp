@@ -49,6 +49,7 @@ import {
   updateData2DB,
   uploadImg2Storage,
 } from "../services/api";
+import InputHashtag from "../components/InputHashtag";
 
 function getVisited() {
   const v = localStorage.getItem("visited");
@@ -637,6 +638,7 @@ const Home = ({ history }) => {
               onIonChange={(e) => setSelectedDate(e.detail.value)}
             ></IonDatetime>
           </IonItem>
+          <InputHashtag />
           <IonItem>
             <IonLabel position="floating">タグ</IonLabel>
             <IonTextarea

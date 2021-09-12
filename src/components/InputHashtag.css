@@ -1,0 +1,11 @@
+.hashtag-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.hashtag {
+  height: 2rem;
+  display: flex;
+  align-items: center;
+}
