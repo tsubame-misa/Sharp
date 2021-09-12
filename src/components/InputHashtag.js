@@ -53,13 +53,20 @@ const InputHashtag = ({ tags, setTags }) => {
                 setHashTag("#" + e.target.value);
               }
             }}
-            onBlur={() => {
+            /*onBlur={() => {
               addHashTag();
-            }}
+            }}*/
             onFocus={() => setHashTag("#")}
           />
           <div className="ok-button">
-            <button onClick={() => addHashTag()}>OK</button>
+            <button
+              onClick={() => {
+                console.log("onClick");
+                addHashTag();
+              }}
+            >
+              OK
+            </button>
           </div>
         </div>
       </div>

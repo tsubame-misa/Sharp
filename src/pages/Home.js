@@ -309,6 +309,10 @@ const Home = ({ history }) => {
     setText(item.memo);
     setSelectedDate(item.birthday);
     setID(item.id);
+    console.log(item.tags?.length);
+    if (item.tag?.length !== undefined) {
+      setTags(item.tags);
+    }
   }
 
   function getDisplayDate(date) {
@@ -397,8 +401,6 @@ const Home = ({ history }) => {
   if (!firstLogined) {
     return <Guide modal={true} />;
   }
-
-  console.log("data", JSON.parse(JSON.stringify(data)));
 
   return (
     <IonPage>
@@ -605,6 +607,7 @@ const Home = ({ history }) => {
                 <IonButton
                   onClick={async () => {
                     clearState();
+                    setshowPopover1({ showPopover1: false });
                     setShowModal(false);
                   }}
                 >
