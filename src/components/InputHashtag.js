@@ -5,18 +5,20 @@ import { closeOutline } from "ionicons/icons";
 
 const InputHashtag = () => {
   const [tags, setTags] = useState([]);
-  const [hashtag, setHashTag] = useState("#");
+  const [hashtag, setHashTag] = useState("#大学 #先輩");
 
   function addHashTag() {
-    if (hashtag !== "#") {
-      const newPrograms = Array.from(tags);
-      newPrograms.push({
-        name: hashtag,
-        id: new Date().getTime().toString(),
-      });
-      setTags(newPrograms);
-      setHashTag("#");
+    if (hashtag === "" || hashtag === "#") {
+      return;
     }
+
+    const newPrograms = Array.from(tags);
+    newPrograms.push({
+      name: hashtag,
+      id: new Date().getTime().toString(),
+    });
+    setTags(newPrograms);
+    setHashTag("#大学 #先輩");
   }
 
   function deleteTag(id) {
@@ -25,7 +27,7 @@ const InputHashtag = () => {
   }
 
   return (
-    <div>
+    <div className="hashtag-area">
       <div className="hashtag-group">
         {tags?.map((item) => {
           return (
@@ -45,14 +47,19 @@ const InputHashtag = () => {
             class="textlines"
             value={hashtag}
             onChange={(e) => {
-              setHashTag(e.target.value);
+              if (e.target.value[0] === "#") {
+                setHashTag(e.target.value);
+              } else {
+                setHashTag("#" + e.target.value);
+              }
             }}
             onBlur={() => {
               addHashTag();
             }}
+            onFocus={() => setHashTag("#")}
           />
           <div className="ok-button">
-            <button onClick={() => addHashTag()}>ok</button>
+            <button onClick={() => addHashTag()}>OK</button>
           </div>
         </div>
       </div>
