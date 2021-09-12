@@ -597,10 +597,10 @@ const Home = ({ history }) => {
             </IonToolbar>
           </IonHeader>
           <div className="camera">
-            <IonAvatar slot="start">
+            <IonAvatar slot="start" className="modal-avatar">
               <img src={img !== "" ? img : avatar_first} alt="icon" />
               <label htmlFor="filename" className="cameraIcon">
-                <IonIcon icon={cameraOutline} size="20px" />
+                <IonIcon icon={cameraOutline} size="20px" color="favorite" />
                 <input
                   type="file"
                   size="16"
