@@ -14,7 +14,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Guide from "./pages/Guide";
 import Search from "./pages/Search";
-import { playCircleOutline, playBackCircleOutline } from "ionicons/icons";
+import { searchOutline, peopleOutline } from "ionicons/icons";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -65,12 +65,12 @@ const App = () => {
 
             <IonTabBar slot="bottom" color="dark">
               <IonTabButton tab="home" href="/home">
-                <IonIcon icon={playCircleOutline} />
-                <IonLabel>録画リスト</IonLabel>
+                <IonIcon icon={peopleOutline} />
+                <IonLabel>プロフィール</IonLabel>
               </IonTabButton>
               <IonTabButton tab="search" href="/search">
-                <IonIcon icon={playBackCircleOutline} />
-                <IonLabel>録画済み</IonLabel>
+                <IonIcon icon={searchOutline} />
+                <IonLabel>検索</IonLabel>
               </IonTabButton>
             </IonTabBar>
           </IonTabs>

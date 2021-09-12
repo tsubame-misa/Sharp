@@ -92,7 +92,7 @@ const Home = ({ history }) => {
   const [showLoading, setShowLoading] = useState(false);
   const [tags, setTags] = useState([]);
 
-  console.log(JSON.parse(JSON.stringify(tags)));
+  //console.log(JSON.parse(JSON.stringify(tags)));
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -249,7 +249,7 @@ const Home = ({ history }) => {
     const newData = {
       name: name,
       birthday: selectedDate,
-      memo: text,
+      // memo: text,
       tags: tags,
       created: getDate(),
       id: new Date().getTime().toString(),
@@ -267,7 +267,8 @@ const Home = ({ history }) => {
     const newData = {
       name: name,
       birthday: selectedDate,
-      memo: text,
+      // memo: text,
+      tags: tags,
       created: getDate(),
       id: ID === null ? new Date().getTime().toString() : ID,
       icon_path: path !== undefined ? path : "",
@@ -309,8 +310,7 @@ const Home = ({ history }) => {
     setText(item.memo);
     setSelectedDate(item.birthday);
     setID(item.id);
-    console.log(item.tags?.length);
-    if (item.tag?.length !== undefined) {
+    if (item.tags?.length !== undefined) {
       setTags(item.tags);
     }
   }

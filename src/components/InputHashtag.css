@@ -43,3 +43,7 @@
 .ok-button button {
   background-color: rgb(206, 206, 206);
 }
+
+.ok-button button:visited {
+  border: solid 0.5px rgb(206, 206, 206);
+}
