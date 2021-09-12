@@ -415,7 +415,7 @@ const Home = ({ history }) => {
       </IonHeader>
       <IonContent>
         {/*リストの表示*/}
-        <IonSearchbar
+        {/*<IonSearchbar
           className="search"
           value={searchText}
           showCancelButton="focus"
@@ -427,7 +427,7 @@ const Home = ({ history }) => {
             setSearch(!search);
             searchProfile(e.detail.value, allStorageData);
           }}
-        ></IonSearchbar>
+        ></IonSearchbar>*/}
 
         {birthdayMember.length !== 0 && searchText === "" && (
           <div>

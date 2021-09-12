@@ -58,6 +58,11 @@ function getVisited() {
 const Search = ({ history }) => {
   const [allStorageData, setAllData] = useState([]);
   const [data, setData] = useState([]);
+  function setData_(v) {
+    /*console.log("setData_");
+      console.trace();*/
+    setData(v);
+  }
   const [img, setImg] = useState("");
   const [imgName, setImgName] = useState("");
   const [preImgName, setPreImgName] = useState("");
@@ -108,7 +113,7 @@ const Search = ({ history }) => {
           });
 
           setAllData(sortedData);
-          setData(sortedData);
+          setData_(sortedData);
           whoIsBirthdayMember(sortedData);
         });
     });
@@ -360,27 +365,34 @@ const Search = ({ history }) => {
     return 0;
   }
 
-  async function SearchData(search, word) {
-    if (!search || word === "" || word === undefined) {
+  async function canselSearch() {
+    setSearch(!search);
+    setData_(allStorageData);
+  }
+
+  async function searchProfile(word, profiles) {
+    if (word === "" || word === undefined) {
       setSearch(!search);
-      setData(allStorageData);
+      setData_(profiles);
       return;
     }
 
-    const newData = allStorageData.filter((item) =>
+    const newData = profiles.filter((item) =>
       findWord(item.memo + " " + item.name, word)
     );
 
     if (newData.length > 0) {
-      setData(newData);
+      setData_(newData);
       return;
     }
-    setData([]);
+    setData_([]);
   }
 
   if (!firstLogined) {
     return <Guide modal={true} />;
   }
+
+  //console.log("data", JSON.parse(JSON.stringify(data)));
 
   return (
     <IonPage>
@@ -409,11 +421,11 @@ const Search = ({ history }) => {
           showCancelButton="focus"
           placeholder="検索"
           cancelButtonText="キャンセル"
-          onIonCancel={() => SearchData(false)}
+          onIonCancel={() => canselSearch()}
           onIonChange={(e) => {
             setSearchText(e.target.value);
             setSearch(!search);
-            SearchData(true, e.detail.value);
+            searchProfile(e.detail.value, allStorageData);
           }}
         ></IonSearchbar>
 
@@ -450,6 +462,7 @@ const Search = ({ history }) => {
                     color="dark"
                     onClick={(e) => {
                       e.persist();
+                      setID(item.id);
                       setshowPopover1({
                         showPopover1: true,
                         event: e,
@@ -485,7 +498,6 @@ const Search = ({ history }) => {
                   onClick={async () => {
                     clearState();
                     setShowModal(false);
-                    setshowPopover1({ showPopover1: false, event: undefined });
                   }}
                 >
                   戻る
@@ -504,7 +516,7 @@ const Search = ({ history }) => {
                     const sortedData = [...data].sort((a, b) => {
                       return b.created - a.created;
                     });
-                    setData(sortedData);
+                    setData_(sortedData);
                     setAllData(sortedData);
                     whoIsBirthdayMember(sortedData);
                     //setShowLoading(false);
@@ -518,10 +530,10 @@ const Search = ({ history }) => {
             </IonToolbar>
           </IonHeader>
           <div className="camera">
-            <IonAvatar slot="start">
+            <IonAvatar slot="start" className="modal-avatar">
               <img src={img !== "" ? img : avatar_first} alt="icon" />
               <label htmlFor="filename" className="cameraIcon">
-                <IonIcon icon={cameraOutline} size="20px" />
+                <IonIcon icon={cameraOutline} size="20px" color="favorite" />
                 <input
                   type="file"
                   size="16"
@@ -617,16 +629,16 @@ const Search = ({ history }) => {
               {
                 text: "削除",
                 handler: async () => {
-                  setshowPopover1({ showPopover1: false, event: undefined });
                   await deleteProfile();
                   const data = await getAllData(userId);
-                  const sortedData = [...data].sort((a, b) => {
+
+                  const profiles = [...data].sort((a, b) => {
                     return b.created - a.created;
                   });
-                  setData(sortedData);
-                  setAllData(sortedData);
-                  whoIsBirthdayMember(sortedData);
-                  SearchData(true, searchText);
+                  setAllData(profiles);
+                  whoIsBirthdayMember(profiles);
+                  searchProfile(searchText, profiles);
+                  setshowPopover1({ showPopover1: false, event: undefined });
                 },
               },
             ]}

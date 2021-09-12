@@ -50,7 +50,7 @@ const App = () => {
     <IonApp>
       <IonReactRouter>
         {isSignedIn ? (
-          /*<IonTabs>
+          <IonTabs>
             <IonRouterOutlet>
               <Route exact path="/home" component={Home} />
               <Route exact path="/">
@@ -70,14 +70,7 @@ const App = () => {
                 <IonLabel>録画済み</IonLabel>
               </IonTabButton>
             </IonTabBar>
-          </IonTabs>*/
-          <IonRouterOutlet>
-            <Route exact path="/home" component={Home} />
-            <Route exact path="/">
-              <Redirect to="/home" />
-            </Route>
-            <Route exact path="/setting/Guide" component={Guide} />
-          </IonRouterOutlet>
+          </IonTabs>
         ) : (
           <Login />
         )}
