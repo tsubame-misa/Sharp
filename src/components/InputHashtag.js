@@ -40,9 +40,9 @@ const InputHashtag = () => {
           );
         })}
 
-        <div>
-          &ensp;
+        <div className="text-input-group">
           <input
+            class="textlines"
             value={hashtag}
             onChange={(e) => {
               setHashTag(e.target.value);
@@ -51,7 +51,9 @@ const InputHashtag = () => {
               addHashTag();
             }}
           />
-          <button onClick={() => addHashTag()}>ok</button>
+          <div className="ok-button">
+            <button onClick={() => addHashTag()}>ok</button>
+          </div>
         </div>
       </div>
     </div>

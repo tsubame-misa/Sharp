@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@creativebulma/bulma-tooltip": "^1.2.0",
     "@ionic/react": "^5.5.0",
     "@ionic/react-router": "^5.5.0",
     "@testing-library/jest-dom": "^5.11.9",
@@ -14,6 +15,7 @@
     "@types/react-dom": "^16.9.10",
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
+    "bulma": "^0.9.3",
     "firebase": "^8.10.0",
     "ionicons": "^5.4.0",
     "react": "^17.0.1",

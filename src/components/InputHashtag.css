@@ -7,5 +7,35 @@
 .hashtag {
   height: 2rem;
   display: flex;
+  margin: 5px;
+  padding: 5px 5px 5px 10px;
   align-items: center;
+  background-color: #f1f1f1;
+}
+
+.textlines {
+  border: 0.5px solid rgb(206, 206, 206); /* 枠線 */
+  color: rgb(143, 143, 143);
+  padding: 0.5em; /* 内側の余白量 */
+  background-color: rgb(255, 255, 255); /* 背景色 */
+}
+.textlines:focus {
+  color: black;
+  border-color: rgb(203); /* 枠線の色 */
+  background-color: rgb(255, 255, 255); /* 背景色 */
+  outline: none; /* ※ブラウザが標準で付加する線を消したいとき */
+}
+
+.text-input-group {
+  display: flex;
+  margin: 5px;
+}
+
+.ok-button {
+  display: flex;
+  border: solid 0.5px rgb(206, 206, 206);
+}
+
+.ok-button button {
+  background-color: rgb(206, 206, 206);
 }
