@@ -398,7 +398,7 @@ const Home = ({ history }) => {
     return <Guide modal={true} />;
   }
 
-  //console.log("data", JSON.parse(JSON.stringify(data)));
+  console.log("data", JSON.parse(JSON.stringify(data)));
 
   return (
     <IonPage>
@@ -553,15 +553,18 @@ const Home = ({ history }) => {
                     {item.tags?.length !== 0 && (
                       <div className="hashtags">
                         {item.tags?.map((tag) => {
-                          console.log(item.tags.length, item.name);
                           return (
-                            <div key={item.id}>
-                              <div
+                            <div key={tag.id}>
+                              <a
                                 className="tag-link"
                                 style={{ color: "#0000ee" }}
+                                href={`/search/${tag.name.slice(
+                                  1,
+                                  tag.name.length
+                                )}`}
                               >
                                 {tag.name}
-                              </div>
+                              </a>
                             </div>
                           );
                         })}

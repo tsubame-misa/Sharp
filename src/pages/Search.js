@@ -49,18 +49,21 @@ import {
   updateData2DB,
   uploadImg2Storage,
 } from "../services/api";
+import InputHashtag from "../components/InputHashtag";
+import { useParams } from "react-router";
 
 function getVisited() {
   const v = localStorage.getItem("visited");
   return !!parseInt(v, 10);
 }
 
-const Search = ({ history }) => {
+const Home = ({ history }) => {
+  const { tag } = useParams();
   const [allStorageData, setAllData] = useState([]);
   const [data, setData] = useState([]);
   function setData_(v) {
     /*console.log("setData_");
-      console.trace();*/
+    console.trace();*/
     setData(v);
   }
   const [img, setImg] = useState("");
@@ -86,9 +89,11 @@ const Search = ({ history }) => {
   const [showFileSizeAlert, setShowFileSizeAlert] = useState(false);
   const [search, setSearch] = useState(false);
   const [birthdayMember, setBirthdayMembser] = useState([]);
-  const [showBirthdayList, setShowBirthdayList] = useState(true);
   const [birthdayHeaderList, setBirthdayHeaderList] = useState([]);
   const [showLoading, setShowLoading] = useState(false);
+  const [tags, setTags] = useState([]);
+
+  console.log(JSON.parse(JSON.stringify(tags)));
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -113,7 +118,12 @@ const Search = ({ history }) => {
           });
 
           setAllData(sortedData);
-          setData_(sortedData);
+          if (tag !== undefined) {
+            setSearchText(tag);
+            searchProfile(tag, sortedData);
+          } else {
+            setData_(sortedData);
+          }
           whoIsBirthdayMember(sortedData);
         });
     });
@@ -246,6 +256,7 @@ const Search = ({ history }) => {
       name: name,
       birthday: selectedDate,
       memo: text,
+      tags: tags,
       created: getDate(),
       id: new Date().getTime().toString(),
       icon_path: await uploadImg(true),
@@ -289,6 +300,7 @@ const Search = ({ history }) => {
     setText(null);
     setSelectedDate(null);
     setID(null);
+    setTags([]);
   }
 
   function addModalData(item) {
@@ -347,10 +359,13 @@ const Search = ({ history }) => {
     clearState();
   }
 
-  function findWord(item, word) {
+  function findWord(item, word, tags) {
     const re = /\s+/g;
     const words = word.split(re);
     let cnt = 0;
+    let tagCnt = 0;
+    console.log(item, word, tags);
+
     for (const w of words) {
       if (item) {
         const find = item.indexOf(`${w}`);
@@ -358,10 +373,21 @@ const Search = ({ history }) => {
           cnt += 1;
         }
       }
+
+      if (tags !== undefined) {
+        for (const t of tags) {
+          if (w === t.name.slice(1, t.name.length)) {
+            tagCnt += 1;
+          }
+        }
+      }
     }
-    if (cnt === words.length) {
+
+    if (cnt === words.length || tagCnt === words.length) {
+      console.log(true, tags);
       return 1;
     }
+
     return 0;
   }
 
@@ -378,8 +404,10 @@ const Search = ({ history }) => {
     }
 
     const newData = profiles.filter((item) =>
-      findWord(item.memo + " " + item.name, word)
+      findWord(item.memo + " " + item.name, word, item.tags)
     );
+
+    console.log(newData);
 
     if (newData.length > 0) {
       setData_(newData);
@@ -414,7 +442,6 @@ const Search = ({ history }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {/*リストの表示*/}
         <IonSearchbar
           className="search"
           value={searchText}
@@ -431,6 +458,7 @@ const Search = ({ history }) => {
 
         {data.length !== 0 ? (
           data.map((item) => {
+            //console.log(item);
             return (
               <IonCard className="card" key={item.id}>
                 <IonCardHeader className="cardHeader">
@@ -479,7 +507,33 @@ const Search = ({ history }) => {
                 </IonCardHeader>
                 　　
                 <IonCardContent className="cardContent">
-                  <div className="memo">{item.memo}</div>
+                  {item.memo !== "" &&
+                    item.memo !== undefined &&
+                    item.memo !== null && (
+                      <div className="memo">{item.memo}</div>
+                    )}
+                  <div>
+                    {item.tags?.length !== 0 && (
+                      <div className="hashtags">
+                        {item.tags?.map((tag) => {
+                          return (
+                            <div key={tag.id}>
+                              <a
+                                className="tag-link"
+                                style={{ color: "#0000ee" }}
+                                href={`/search/${tag.name.slice(
+                                  1,
+                                  tag.name.length
+                                )}`}
+                              >
+                                {tag.name}
+                              </a>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}{" "}
+                  </div>
                 </IonCardContent>
               </IonCard>
             );
@@ -588,4 +642,4 @@ const Search = ({ history }) => {
   );
 };
 
-export default Search;
+export default Home;

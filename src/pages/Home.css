@@ -90,17 +90,17 @@ ion-button.edit-button {
   padding: 10px;
 }
 
-.tag-link {
+a {
   color: #0000ee;
   text-decoration: none;
 }
 
-.tag-link:hover {
+a:hover {
   color: #0000ee;
   text-decoration: underline;
 }
 
-.tag-link:visited {
+a:visited {
   color: #551a8b;
   text-decoration: underline;
 }
@@ -111,6 +111,10 @@ ion-button.edit-button {
 
 .modal-avatar {
   position: relative;
+}
+ion-avatar.avatar-ionic.md.hydrated {
+  height: 100%;
+  width: 100%;
 }
 
 .camera {

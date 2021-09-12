@@ -56,7 +56,10 @@ const App = () => {
               <Route exact path="/">
                 <Redirect to="/home" />
               </Route>
-              <Route exact path="/search" component={Search} />
+              {/*よくない？*/}
+
+              <Route path="/search" component={Search} />
+              <Route path="/search/:tag" component={Search} />
               <Route exact path="/setting/Guide" component={Guide} />
             </IonRouterOutlet>
 
