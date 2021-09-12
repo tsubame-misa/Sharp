@@ -81,6 +81,30 @@ ion-button.edit-button {
   /*   background-color: #1c3786; */
 }
 
+.hashtags {
+  display: flex;
+  background-color: #f1f1f1;
+  color: black;
+  line-height: 20px;
+  font-size: 15px;
+  padding: 10px;
+}
+
+.tag-link {
+  color: #0000ee;
+  text-decoration: none;
+}
+
+.tag-link:hover {
+  color: #0000ee;
+  text-decoration: underline;
+}
+
+.tag-link:visited {
+  color: #551a8b;
+  text-decoration: underline;
+}
+
 .my-custom-class .modal-wrapper .ion-page {
   display: inline;
 }

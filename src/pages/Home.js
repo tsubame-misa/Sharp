@@ -90,6 +90,9 @@ const Home = ({ history }) => {
   const [showBirthdayList, setShowBirthdayList] = useState(true);
   const [birthdayHeaderList, setBirthdayHeaderList] = useState([]);
   const [showLoading, setShowLoading] = useState(false);
+  const [tags, setTags] = useState([]);
+
+  console.log(JSON.parse(JSON.stringify(tags)));
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -247,6 +250,7 @@ const Home = ({ history }) => {
       name: name,
       birthday: selectedDate,
       memo: text,
+      tags: tags,
       created: getDate(),
       id: new Date().getTime().toString(),
       icon_path: await uploadImg(true),
@@ -290,6 +294,7 @@ const Home = ({ history }) => {
     setText(null);
     setSelectedDate(null);
     setID(null);
+    setTags([]);
   }
 
   function addModalData(item) {
@@ -490,6 +495,7 @@ const Home = ({ history }) => {
 
         {data.length !== 0 ? (
           data.map((item) => {
+            //console.log(item);
             return (
               <IonCard className="card" key={item.id}>
                 <IonCardHeader className="cardHeader">
@@ -538,7 +544,30 @@ const Home = ({ history }) => {
                 </IonCardHeader>
                 　　
                 <IonCardContent className="cardContent">
-                  <div className="memo">{item.memo}</div>
+                  {item.memo !== "" &&
+                    item.memo !== undefined &&
+                    item.memo !== null && (
+                      <div className="memo">{item.memo}</div>
+                    )}
+                  <div>
+                    {item.tags?.length !== 0 && (
+                      <div className="hashtags">
+                        {item.tags?.map((tag) => {
+                          console.log(item.tags.length, item.name);
+                          return (
+                            <div key={item.id}>
+                              <div
+                                className="tag-link"
+                                style={{ color: "#0000ee" }}
+                              >
+                                {tag.name}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}{" "}
+                  </div>
                 </IonCardContent>
               </IonCard>
             );
@@ -644,7 +673,7 @@ const Home = ({ history }) => {
             <IonLabel position="stacked" style={{ fontSize: "1.1rem" }}>
               タグ
             </IonLabel>
-            <InputHashtag />
+            <InputHashtag tags={tags} setTags={setTags} />
           </IonItem>
 
           <IonItem>

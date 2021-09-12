@@ -3,8 +3,8 @@ import { IonIcon } from "@ionic/react";
 import "./InputHashtag.css";
 import { closeOutline } from "ionicons/icons";
 
-const InputHashtag = () => {
-  const [tags, setTags] = useState([]);
+const InputHashtag = ({ tags, setTags }) => {
+  //const [tags, setTags] = useState([]);
   const [hashtag, setHashTag] = useState("#大学 #先輩");
 
   function addHashTag() {
@@ -44,7 +44,7 @@ const InputHashtag = () => {
 
         <div className="text-input-group">
           <input
-            class="textlines"
+            className="textlines"
             value={hashtag}
             onChange={(e) => {
               if (e.target.value[0] === "#") {
