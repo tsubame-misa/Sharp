@@ -389,19 +389,15 @@ const Home = ({ history }) => {
           <IonTitle className="ionTitle">#Sharp</IonTitle>
           <IonButton
             className="mainSet-button"
-            color="white"
+            color="test"
+            fill="none"
             slot="end"
             onClick={(e) => {
               e.persist();
               setshowPopover2({ showPopover2: true, event: e });
             }}
           >
-            <IonIcon
-              slot="icon-only"
-              size="large"
-              color="light"
-              icon={menuOutline}
-            ></IonIcon>
+            <IonIcon slot="icon-only" size="large" icon={menuOutline}></IonIcon>
           </IonButton>
         </IonToolbar>
       </IonHeader>
