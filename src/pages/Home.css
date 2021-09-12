@@ -104,6 +104,7 @@ ion-button.edit-button {
   justify-content: center;
   top: 0;
   left: 0;
+  font-size: 30px;
 }
 
 #filename {
