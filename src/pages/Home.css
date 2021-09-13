@@ -42,6 +42,7 @@ img.avatar {
 
 .titles {
   display: flex;
+  gap: 2px;
   flex-direction: column;
   justify-content: center;
 }
@@ -53,7 +54,7 @@ img.avatar {
 }
 
 .sub-title {
-  display: inline-block;
+  display: flex;
   padding-left: 15px;
   height: 10px;
   font-size: 13px;
@@ -187,6 +188,25 @@ ion-avatar.avatar-ionic.md.hydrated {
   color: rgb(143, 143, 143);
 }
 
+.cake {
+  height: 15px;
+  padding-right: 2px;
+  width: 17px;
+}
+
+.cake .icon {
+  height: 15px;
+  width: 16px;
+  background-image: url("../images/cake.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+}
+
+.birthday {
+  padding-left: 3px;
+}
+
 @media (prefers-color-scheme: dark) {
   .hashtags {
     display: flex;
@@ -227,5 +247,14 @@ ion-avatar.avatar-ionic.md.hydrated {
   }
   .date-empty {
     color: #7a7a7a;
+  }
+
+  .cake .icon {
+    height: 15px;
+    width: 16px;
+    background-image: url("../images/darkCake.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
   }
 }

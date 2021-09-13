@@ -50,6 +50,8 @@ import {
   uploadImg2Storage,
 } from "../services/api";
 import InputHashtag from "../components/InputHashtag";
+import cakeImg from "../images/cake.svg";
+import darkCakeImg from "../images/darkCake.svg";
 
 function getVisited() {
   const v = localStorage.getItem("visited");
@@ -519,7 +521,14 @@ const Home = ({ history }) => {
                     <div className="titles">
                       <IonCardTitle className="title">{item.name}</IonCardTitle>
                       <IonCardSubtitle className="sub-title">
-                        {getDisplayDate(item.birthday)}
+                        <div className="cake">
+                          <div className="icon" />
+                        </div>
+                        <div className="birthday">
+                          {item.birthday
+                            ? getDisplayDate(item.birthday)
+                            : "未設定"}
+                        </div>
                       </IonCardSubtitle>
                     </div>
                   </div>
