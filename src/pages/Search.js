@@ -515,14 +515,14 @@ const Search = ({ history }) => {
                   </IonButton>
                 </IonCardHeader>
                 　　
-                <IonCardContent className="cardContent">
-                  {/*item.memo !== "" &&
+                {/*item.memo !== "" &&
                     item.memo !== undefined &&
                     item.memo !== null && (
                       <div className="memo">{item.memo}</div>
                     )*/}
-                  <div>
-                    {item.tags?.length !== 0 && (
+                <div>
+                  {item.tags?.length !== 0 && (
+                    <IonCardContent className="cardContent">
                       <div className="hashtags">
                         {item.tags?.map((tag) => {
                           return (
@@ -539,9 +539,9 @@ const Search = ({ history }) => {
                           );
                         })}
                       </div>
-                    )}{" "}
-                  </div>
-                </IonCardContent>
+                    </IonCardContent>
+                  )}{" "}
+                </div>
               </IonCard>
             );
           })
@@ -556,10 +556,10 @@ const Search = ({ history }) => {
               <IonTitle>追加</IonTitle>
               <IonButtons slot="start">
                 <IonButton
-                  onClick={async () => {
-                    clearState();
+                  onClick={() => {
                     setshowPopover1({ showPopover1: false });
                     setShowModal(false);
+                    requestAnimationFrame(() => clearState());
                   }}
                 >
                   戻る
@@ -575,13 +575,12 @@ const Search = ({ history }) => {
                       : saveData());
                     //setShowLoading(true);
                     const data = await getAllData(userId);
-                    const profile = [...data].sort((a, b) => {
+                    const sortedData = [...data].sort((a, b) => {
                       return b.created - a.created;
                     });
-                    setData_(profile);
-                    setAllData(profile);
-                    searchProfile(searchText, profile);
-                    //whoIsBirthdayMember(sortedData);
+                    setData_(sortedData);
+                    setAllData(sortedData);
+                    whoIsBirthdayMember(sortedData);
                     //setShowLoading(false);
                   }}
                   //条件要検討
@@ -623,9 +622,14 @@ const Search = ({ history }) => {
               min="1900-01-01"
               doneText="OK"
               cancelText="キャンセル"
-              value={selectedDate}
-              // defaultValue={selectedDate}
-              onIonChange={(e) => setSelectedDate(e.detail.value)}
+              value={selectedDate ?? "2000-01-01"}
+              className={selectedDate ? "date-changed" : "date-empty"}
+              onIonChange={(e) => {
+                console.log("show modal", showModal);
+                if (showModal) {
+                  setSelectedDate(e.detail.value);
+                }
+              }}
             ></IonDatetime>
           </IonItem>
           <IonItem>
