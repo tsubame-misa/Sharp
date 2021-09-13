@@ -17,6 +17,11 @@
   background-color: #f1f1f1;
 }
 
+.hashtag button {
+  padding: 0;
+  padding-top: 4px;
+}
+
 .hashtag-char {
   display: flex;
   align-items: center;
@@ -53,4 +58,67 @@
 
 .ok-button button:visited {
   border: solid 0.5px rgb(206, 206, 206);
+}
+
+@media (prefers-color-scheme: dark) {
+  .hashtag-area {
+    margin: 5px 0px 10px 0px;
+  }
+
+  .hashtag-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .hashtag {
+    height: 2rem;
+    display: flex;
+    margin: 5px;
+    padding: 5px 5px 5px 10px;
+    align-items: center;
+    background-color: rgb(97, 97, 97);
+  }
+
+  .hashtag button {
+    background-color: rgb(97, 97, 97);
+  }
+
+  .hashtag-char {
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+  }
+
+  .textlines {
+    border: none;
+    color: #7a7a7a;
+    padding: 0.5rem 0.5rem 0.5rem 0rem;
+    background-color: rgb(26, 26, 26); /* 背景色 */
+  }
+  .textlines:focus {
+    color: white;
+    border-color: none; /* 枠線の色 */
+    background-color: rgb(26, 26, 26); /* 背景色 */
+    outline: none; /* ※ブラウザが標準で付加する線を消したいとき */
+  }
+
+  .text-input-group {
+    display: flex;
+    margin: 5px;
+    border: 0.5px solid rgb(97, 97, 97); /* 枠線 */
+  }
+
+  .ok-button {
+    display: flex;
+    border: solid 0.5px rgb(97, 97, 97);
+  }
+
+  .ok-button button {
+    background-color: rgb(97, 97, 97);
+  }
+
+  .ok-button button:visited {
+    border: solid 0.5px rgb(97, 97, 97);
+  }
 }

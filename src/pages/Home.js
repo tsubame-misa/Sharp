@@ -287,7 +287,9 @@ const Home = ({ history }) => {
     clearState();
   }
 
+  console.log(selectedDate);
   function clearState() {
+    console.log("clearState");
     setName(null);
     setImg("");
     setImgName("");
@@ -600,10 +602,10 @@ const Home = ({ history }) => {
               <IonTitle>追加</IonTitle>
               <IonButtons slot="start">
                 <IonButton
-                  onClick={async () => {
-                    clearState();
+                  onClick={() => {
                     setshowPopover1({ showPopover1: false });
                     setShowModal(false);
+                    requestAnimationFrame(() => clearState());
                   }}
                 >
                   戻る
@@ -666,9 +668,14 @@ const Home = ({ history }) => {
               min="1900-01-01"
               doneText="OK"
               cancelText="キャンセル"
-              value={selectedDate}
-              // defaultValue={selectedDate}
-              onIonChange={(e) => setSelectedDate(e.detail.value)}
+              value={selectedDate ?? "2000-01-01"}
+              className={selectedDate ? "date-changed" : "date-empty"}
+              onIonChange={(e) => {
+                console.log("show modal", showModal);
+                if (showModal) {
+                  setSelectedDate(e.detail.value);
+                }
+              }}
             ></IonDatetime>
           </IonItem>
           <IonItem>

@@ -180,6 +180,13 @@ ion-avatar.avatar-ionic.md.hydrated {
   --ion-color-tint: var(--ion-color-test-tint);
 }
 
+.date-changed {
+  color: black;
+}
+.date-empty {
+  color: rgb(143, 143, 143);
+}
+
 @media (prefers-color-scheme: dark) {
   .hashtags {
     display: flex;
@@ -213,5 +220,12 @@ ion-avatar.avatar-ionic.md.hydrated {
     color: inherit !important;
     text-decoration: underline;
     background-color: #494949;
+  }
+
+  .date-changed {
+    color: #ffffff;
+  }
+  .date-empty {
+    color: #7a7a7a;
   }
 }
