@@ -280,7 +280,7 @@ const Home = ({ history }) => {
       icon_name: imgName,
     };
 
-    const allData = data.map((item) => {
+    const allData = allStorageData.map((item) => {
       if (item.id === newData.id) {
         newData.id = new Date().getTime().toString();
         return newData;
@@ -315,6 +315,9 @@ const Home = ({ history }) => {
     setText(item.memo);
     setSelectedDate(item.birthday);
     setID(item.id);
+    if (item.tags?.length !== undefined) {
+      setTags(item.tags);
+    }
   }
 
   function getDisplayDate(date) {
@@ -383,7 +386,7 @@ const Home = ({ history }) => {
       }
     }
 
-    if (cnt === words.length || tagCnt === words.length) {
+    if (cnt + tagCnt === words.length) {
       console.log(true, tags);
       return 1;
     }
@@ -567,12 +570,13 @@ const Home = ({ history }) => {
                       : saveData());
                     //setShowLoading(true);
                     const data = await getAllData(userId);
-                    const sortedData = [...data].sort((a, b) => {
+                    const profile = [...data].sort((a, b) => {
                       return b.created - a.created;
                     });
-                    setData_(sortedData);
-                    setAllData(sortedData);
-                    whoIsBirthdayMember(sortedData);
+                    setData_(profile);
+                    setAllData(profile);
+                    searchProfile(searchText, profile);
+                    //whoIsBirthdayMember(sortedData);
                     //setShowLoading(false);
                   }}
                   //条件要検討
