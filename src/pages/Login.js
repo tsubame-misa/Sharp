@@ -39,10 +39,10 @@ const Login = () => {
           </div>
           <div className="subtitle">
             <p className="hashtags">
-              #About_You <br />
-              #Do_You_Remember
+              #About_you <br />
+              #Do_you_remember?
               <br />
-              #What_Kind_Of_Person
+              #Using_this_app
             </p>
             <div className="button">
               <IonButton color="light" onClick={() => login()}>
