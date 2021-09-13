@@ -83,6 +83,7 @@ ion-button.edit-button {
 
 .hashtags {
   display: flex;
+  flex-wrap: wrap;
   background-color: #f1f1f1;
   color: black;
   line-height: 20px;

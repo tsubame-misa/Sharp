@@ -542,6 +542,91 @@ const Home = ({ history }) => {
           <div className="empty">一致する検索結果はありません</div>
         )}
 
+        {/*モーダル*/}
+        <IonModal isOpen={showModal} cssClass="my-custom-class">
+          <IonHeader>
+            <IonToolbar className="Header">
+              <IonTitle>追加</IonTitle>
+              <IonButtons slot="start">
+                <IonButton
+                  onClick={async () => {
+                    clearState();
+                    setshowPopover1({ showPopover1: false });
+                    setShowModal(false);
+                  }}
+                >
+                  戻る
+                </IonButton>
+              </IonButtons>
+              <IonButtons slot="end">
+                <IonButton
+                  onClick={async () => {
+                    setShowModal(false);
+                    setshowPopover1({ showPopover1: false });
+                    await (popoverState1.showPopover1
+                      ? updateData()
+                      : saveData());
+                    //setShowLoading(true);
+                    const data = await getAllData(userId);
+                    const sortedData = [...data].sort((a, b) => {
+                      return b.created - a.created;
+                    });
+                    setData_(sortedData);
+                    setAllData(sortedData);
+                    whoIsBirthdayMember(sortedData);
+                    //setShowLoading(false);
+                  }}
+                  //条件要検討
+                  disabled={name == null || name === ""}
+                >
+                  保存
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <div className="camera">
+            <IonAvatar slot="start" className="modal-avatar">
+              <div>
+                <img src={img !== "" ? img : avatar_first} alt="icon" />
+                <label htmlFor="filename" className="cameraIcon">
+                  <IonIcon icon={cameraOutline} size="20px" color="favorite" />
+                  <input
+                    type="file"
+                    size="16"
+                    id="filename"
+                    src={img}
+                    onChange={addPicture}
+                  />
+                </label>
+              </div>
+            </IonAvatar>
+          </div>
+          <IonItem>
+            <IonLabel position="floating">名前*</IonLabel>
+            <IonInput
+              value={name}
+              placeholder="名前、あだ名"
+              onIonChange={(e) => setName(e.detail.value)}
+            ></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonLabel position="floating">誕生日</IonLabel>
+            <IonDatetime
+              displayFormat="YYYY/MM/DD"
+              min="1900-01-01"
+              max="2020-12-31"
+              value={selectedDate}
+              onIonChange={(e) => setSelectedDate(e.detail.value)}
+            ></IonDatetime>
+          </IonItem>
+          <IonItem>
+            <IonLabel position="stacked" style={{ fontSize: "1.1rem" }}>
+              タグ
+            </IonLabel>
+            <InputHashtag tags={tags} setTags={setTags} />
+          </IonItem>
+        </IonModal>
+
         <IonAlert
           isOpen={showFileSizeAlert}
           onDidDismiss={() => setShowFileSizeAlert(false)}
