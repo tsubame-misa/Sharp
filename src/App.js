@@ -15,6 +15,7 @@ import Login from "./pages/Login";
 import Guide from "./pages/Guide";
 import Search from "./pages/Search";
 import { searchOutline, peopleOutline } from "ionicons/icons";
+import React from "react";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -49,34 +50,37 @@ const App = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        {isSignedIn ? (
-          <IonTabs>
-            <IonRouterOutlet>
-              <Route exact path="/home" component={Home} />
-              <Route exact path="/">
-                <Redirect to="/home" />
-              </Route>
-              {/*よくない？*/}
+        <IonTabs>
+          <IonRouterOutlet>
+            <Route
+              exact
+              path="/home"
+              render={(props) => {
+                return isSignedIn ? <Home {...props} /> : <Login />;
+              }}
+            />
+            <Route exact path="/">
+              <Redirect to="/home" />
+            </Route>
+            {/*よくない？*/}
+            <Route path="/search" component={Search} />
+            <Route path="/search-blank" component={Search} exact />
+            {/* <Route path="/search/:tag" component={Search} /> */}
 
-              <Route path="/search" component={Search} />
-              <Route path="/search/:tag" component={Search} />
-              <Route exact path="/setting/Guide" component={Guide} />
-            </IonRouterOutlet>
+            <Route exact path="/setting/Guide" component={Guide} />
+          </IonRouterOutlet>
 
-            <IonTabBar slot="bottom">
-              <IonTabButton tab="home" href="/home">
-                <IonIcon icon={peopleOutline} />
-                <IonLabel>プロフィール</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="search" href="/search">
-                <IonIcon icon={searchOutline} />
-                <IonLabel>検索</IonLabel>
-              </IonTabButton>
-            </IonTabBar>
-          </IonTabs>
-        ) : (
-          <Login />
-        )}
+          <IonTabBar slot="bottom">
+            <IonTabButton tab="home" href="/home">
+              <IonIcon icon={peopleOutline} />
+              <IonLabel>プロフィール</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="search" href="/search-blank">
+              <IonIcon icon={searchOutline} />
+              <IonLabel>検索</IonLabel>
+            </IonTabButton>
+          </IonTabBar>
+        </IonTabs>
       </IonReactRouter>
     </IonApp>
   );

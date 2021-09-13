@@ -59,7 +59,9 @@ function getVisited() {
 }
 
 const Search = ({ history }) => {
-  const { tag } = useParams();
+  //const { tag } = useParams();
+  const tag = new URL(window.location).searchParams.get("q") ?? "";
+
   const [allStorageData, setAllData] = useState([]);
   const [data, setData] = useState([]);
   function setData_(v) {
@@ -94,7 +96,7 @@ const Search = ({ history }) => {
   const [showLoading, setShowLoading] = useState(false);
   const [tags, setTags] = useState([]);
 
-  console.log(JSON.parse(JSON.stringify(tags)));
+  //console.log(JSON.parse(JSON.stringify(tags)));
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -139,7 +141,6 @@ const Search = ({ history }) => {
   useIonViewWillLeave(() => {
     if (tag !== undefined) {
       setSearchText("");
-      window.location.replace("/home");
     }
   });
 
@@ -529,10 +530,7 @@ const Search = ({ history }) => {
                               <a
                                 className="tag-link"
                                 /*style={{ color: "#0000ee" }}*/
-                                href={`/search/${tag.name.slice(
-                                  1,
-                                  tag.name.length
-                                )}`}
+                                href={`/search?q=${tag.name.split("#")[1]}`}
                               >
                                 {tag.name}
                               </a>

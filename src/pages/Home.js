@@ -558,11 +558,7 @@ const Home = ({ history }) => {
                           <div key={tag.id} className="tag-wrapper">
                             <a
                               className="tag-link"
-                              /*style={{ color: "#0000ee" }}*/
-                              href={`/search/${tag.name.slice(
-                                1,
-                                tag.name.length
-                              )}`}
+                              href={`/search?q=${tag.name.split("#")[1]}`}
                             >
                               {tag.name}
                             </a>
