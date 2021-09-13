@@ -171,3 +171,12 @@ ion-avatar.avatar-ionic.md.hydrated {
   --ion-color-shade: var(--ion-color-test-shade);
   --ion-color-tint: var(--ion-color-test-tint);
 }
+
+.ion-color-fortabcol {
+  --ion-color-base: var(--ion-color-fortabcol);
+  --ion-color-base-rgb: var(--ion-color-fortabcol-rgb);
+  --ion-color-contrast: var(--ion-color-fortabcol-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-fortabcol-contrast-rgb);
+  --ion-color-shade: var(--ion-color-fortabcol-shade);
+  --ion-color-tint: var(--ion-color-fortabcol-tint);
+}

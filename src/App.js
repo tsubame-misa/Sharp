@@ -63,8 +63,8 @@ const App = () => {
               <Route exact path="/setting/Guide" component={Guide} />
             </IonRouterOutlet>
 
-            <IonTabBar slot="bottom" color="dark">
-              <IonTabButton tab="home" href="/home">
+            <IonTabBar slot="bottom" color="fortabcol">
+              <IonTabButton className="TabButton" tab="home" href="/home">
                 <IonIcon icon={peopleOutline} />
                 <IonLabel>プロフィール</IonLabel>
               </IonTabButton>
