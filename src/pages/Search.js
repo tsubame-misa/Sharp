@@ -122,6 +122,7 @@ const Home = ({ history }) => {
             setSearchText(tag);
             searchProfile(tag, sortedData);
           } else {
+            setSearchText("");
             setData_([]);
           }
         });
