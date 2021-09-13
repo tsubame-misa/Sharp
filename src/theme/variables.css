@@ -3,6 +3,10 @@ http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
 :root {
+  --ion-tab-bar-color: #a1a1a1;
+  --ion-tab-bar-background: #000000;
+  --ion-tab-bar-color-selected: #ffffff;
+
   /** favorite **/
   --ion-color-favorite: #292929;
   --ion-color-favorite-rgb: 34, 36, 40;
@@ -99,6 +103,10 @@ http://ionicframework.com/docs/theming/ */
    */
 
   body {
+    --ion-tab-bar-color: #a1a1a1;
+    --ion-tab-bar-background: #000000;
+    --ion-tab-bar-color-selected: #ffffff;
+
     /** favorite **/
     --ion-color-favorite: #292929;
     --ion-color-favorite-rgb: 34, 36, 40;
