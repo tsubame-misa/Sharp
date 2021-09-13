@@ -122,9 +122,8 @@ const Home = ({ history }) => {
             setSearchText(tag);
             searchProfile(tag, sortedData);
           } else {
-            setData_(sortedData);
+            setData_([]);
           }
-          whoIsBirthdayMember(sortedData);
         });
     });
   });
@@ -255,7 +254,7 @@ const Home = ({ history }) => {
     const newData = {
       name: name,
       birthday: selectedDate,
-      memo: text,
+      // memo: text,
       tags: tags,
       created: getDate(),
       id: new Date().getTime().toString(),
@@ -273,7 +272,8 @@ const Home = ({ history }) => {
     const newData = {
       name: name,
       birthday: selectedDate,
-      memo: text,
+      // memo: text,
+      tags: tags,
       created: getDate(),
       id: ID === null ? new Date().getTime().toString() : ID,
       icon_path: path !== undefined ? path : "",
@@ -393,21 +393,19 @@ const Home = ({ history }) => {
 
   async function canselSearch() {
     setSearch(!search);
-    setData_(allStorageData);
+    setData_([]);
   }
 
   async function searchProfile(word, profiles) {
     if (word === "" || word === undefined) {
       setSearch(!search);
-      setData_(profiles);
+      setData_([]);
       return;
     }
 
     const newData = profiles.filter((item) =>
       findWord(item.memo + " " + item.name, word, item.tags)
     );
-
-    console.log(newData);
 
     if (newData.length > 0) {
       setData_(newData);
@@ -587,21 +585,20 @@ const Home = ({ history }) => {
           </IonHeader>
           <div className="camera">
             <IonAvatar slot="start" className="modal-avatar">
-              <div>
-                <img src={img !== "" ? img : avatar_first} alt="icon" />
-                <label htmlFor="filename" className="cameraIcon">
-                  <IonIcon icon={cameraOutline} size="20px" color="favorite" />
-                  <input
-                    type="file"
-                    size="16"
-                    id="filename"
-                    src={img}
-                    onChange={addPicture}
-                  />
-                </label>
-              </div>
+              <img src={img !== "" ? img : avatar_first} alt="icon" />
+              <label htmlFor="filename" className="cameraIcon">
+                <IonIcon icon={cameraOutline} size="20px" color="favorite" />
+                <input
+                  type="file"
+                  size="16"
+                  id="filename"
+                  src={img}
+                  onChange={addPicture}
+                />
+              </label>
             </IonAvatar>
           </div>
+
           <IonItem>
             <IonLabel position="floating">名前*</IonLabel>
             <IonInput
@@ -615,8 +612,10 @@ const Home = ({ history }) => {
             <IonDatetime
               displayFormat="YYYY/MM/DD"
               min="1900-01-01"
-              max="2020-12-31"
+              doneText="OK"
+              cancelText="キャンセル"
               value={selectedDate}
+              // defaultValue={selectedDate}
               onIonChange={(e) => setSelectedDate(e.detail.value)}
             ></IonDatetime>
           </IonItem>
