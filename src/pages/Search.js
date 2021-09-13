@@ -28,6 +28,7 @@ import {
   IonAlert,
   IonItemDivider,
   IonLoading,
+  useIonViewWillLeave,
 } from "@ionic/react";
 import {
   addOutline,
@@ -57,7 +58,7 @@ function getVisited() {
   return !!parseInt(v, 10);
 }
 
-const Home = ({ history }) => {
+const Search = ({ history }) => {
   const { tag } = useParams();
   const [allStorageData, setAllData] = useState([]);
   const [data, setData] = useState([]);
@@ -134,6 +135,13 @@ const Home = ({ history }) => {
       setFirstLogined(getVisited());
     });
   }, []);
+
+  useIonViewWillLeave(() => {
+    if (tag !== undefined) {
+      setSearchText("");
+      window.location.replace("/home");
+    }
+  });
 
   function whoIsBirthdayMember(data) {
     const todayAll = getDate();
@@ -368,7 +376,6 @@ const Home = ({ history }) => {
     const words = word.split(re);
     let cnt = 0;
     let tagCnt = 0;
-    console.log(item, word, tags);
 
     for (const w of words) {
       if (item) {
@@ -388,7 +395,6 @@ const Home = ({ history }) => {
     }
 
     if (cnt + tagCnt === words.length) {
-      console.log(true, tags);
       return 1;
     }
 
@@ -732,4 +738,4 @@ const Home = ({ history }) => {
   );
 };
 
-export default Home;
+export default Search;
