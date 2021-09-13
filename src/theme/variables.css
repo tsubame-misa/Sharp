@@ -3,13 +3,9 @@ http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
 :root {
-  /** fortabcol **/
-  --ion-color-fortabcol: #ff0000;
-  --ion-color-fortabcol-rgb: rgb(250, 2, 2);
-  --ion-color-fortabcol-contrast: #bebebe;
-  --ion-color-fortabcol-contrast-rgb: rgb(190, 190, 190);
-  --ion-color-fortabcol-shade: #afae4d;
-  --ion-color-fortabcol-tint: #f80707;
+  --ion-tab-bar-color: #a1a1a1;
+  --ion-tab-bar-background: #000000;
+  --ion-tab-bar-color-selected: #ffffff;
 
   /** favorite **/
   --ion-color-favorite: #292929;
@@ -107,6 +103,10 @@ http://ionicframework.com/docs/theming/ */
    */
 
   body {
+    --ion-tab-bar-color: #a1a1a1;
+    --ion-tab-bar-background: #000000;
+    --ion-tab-bar-color-selected: #ffffff;
+
     /** favorite **/
     --ion-color-favorite: #292929;
     --ion-color-favorite-rgb: 34, 36, 40;
