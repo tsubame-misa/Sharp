@@ -81,31 +81,6 @@ ion-button.edit-button {
   /*   background-color: #1c3786; */
 }
 
-.hashtags {
-  display: flex;
-  flex-wrap: wrap;
-  background-color: #f1f1f1;
-  color: black;
-  line-height: 20px;
-  font-size: 15px;
-  padding: 10px;
-}
-
-a {
-  color: #0000ee;
-  text-decoration: none;
-}
-
-a:hover {
-  color: #0000ee;
-  text-decoration: underline;
-}
-
-a:visited {
-  color: #551a8b;
-  text-decoration: underline;
-}
-
 .my-custom-class .modal-wrapper .ion-page {
   display: inline;
 }
@@ -140,6 +115,39 @@ ion-avatar.avatar-ionic.md.hydrated {
   display: none;
 }
 
+.hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #f1f1f1;
+  color: black;
+  line-height: 20px;
+  font-size: 15px;
+  padding: 10px;
+}
+.tag-wrapper {
+  color: #4c8dff;
+  background-color: #f1f1f1;
+}
+
+.tag-wrapper a {
+  /*よくない*/
+  color: inherit !important;
+  text-decoration: none;
+  background-color: #f1f1f1;
+}
+
+.tag-wrapper a:hover {
+  color: inherit !important;
+  text-decoration: underline;
+  background-color: #f1f1f1;
+}
+
+.tag-wrapper a:visited {
+  color: inherit !important;
+  text-decoration: underline;
+  background-color: #f1f1f1;
+}
+
 .empty {
   height: 60%;
   display: flex;
@@ -170,4 +178,40 @@ ion-avatar.avatar-ionic.md.hydrated {
   --ion-color-contrast-rgb: var(--ion-color-test-contrast-rgb);
   --ion-color-shade: var(--ion-color-test-shade);
   --ion-color-tint: var(--ion-color-test-tint);
+}
+
+@media (prefers-color-scheme: dark) {
+  .hashtags {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #494949;
+    color: black;
+    line-height: 20px;
+    font-size: 15px;
+    padding: 10px;
+  }
+
+  .tag-wrapper {
+    color: #47c5ff;
+    background-color: #494949;
+  }
+
+  .tag-wrapper a {
+    /*よくない*/
+    color: inherit !important;
+    text-decoration: none;
+    background-color: #494949;
+  }
+
+  .tag-wrapper a:hover {
+    color: inherit !important;
+    text-decoration: underline;
+    background-color: #494949;
+  }
+
+  .tag-wrapper a:visited {
+    color: inherit !important;
+    text-decoration: underline;
+    background-color: #494949;
+  }
 }

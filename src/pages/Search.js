@@ -507,20 +507,20 @@ const Home = ({ history }) => {
                 </IonCardHeader>
                 　　
                 <IonCardContent className="cardContent">
-                  {item.memo !== "" &&
+                  {/*item.memo !== "" &&
                     item.memo !== undefined &&
                     item.memo !== null && (
                       <div className="memo">{item.memo}</div>
-                    )}
+                    )*/}
                   <div>
                     {item.tags?.length !== 0 && (
                       <div className="hashtags">
                         {item.tags?.map((tag) => {
                           return (
-                            <div key={tag.id}>
+                            <div key={tag.id} className="tag-wrapper">
                               <a
                                 className="tag-link"
-                                style={{ color: "#0000ee" }}
+                                /*style={{ color: "#0000ee" }}*/
                                 href={`/search/${tag.name.slice(
                                   1,
                                   tag.name.length
