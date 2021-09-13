@@ -528,6 +528,7 @@ const Home = ({ history }) => {
                               >
                                 {tag.name}
                               </a>
+                              &ensp;
                             </div>
                           );
                         })}
