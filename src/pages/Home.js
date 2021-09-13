@@ -49,6 +49,7 @@ import {
   updateData2DB,
   uploadImg2Storage,
 } from "../services/api";
+import InputHashtag from "../components/InputHashtag";
 
 function getVisited() {
   const v = localStorage.getItem("visited");
@@ -89,6 +90,9 @@ const Home = ({ history }) => {
   const [showBirthdayList, setShowBirthdayList] = useState(true);
   const [birthdayHeaderList, setBirthdayHeaderList] = useState([]);
   const [showLoading, setShowLoading] = useState(false);
+  const [tags, setTags] = useState([]);
+
+  //console.log(JSON.parse(JSON.stringify(tags)));
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -245,7 +249,8 @@ const Home = ({ history }) => {
     const newData = {
       name: name,
       birthday: selectedDate,
-      memo: text,
+      // memo: text,
+      tags: tags,
       created: getDate(),
       id: new Date().getTime().toString(),
       icon_path: await uploadImg(true),
@@ -262,7 +267,8 @@ const Home = ({ history }) => {
     const newData = {
       name: name,
       birthday: selectedDate,
-      memo: text,
+      // memo: text,
+      tags: tags,
       created: getDate(),
       id: ID === null ? new Date().getTime().toString() : ID,
       icon_path: path !== undefined ? path : "",
@@ -289,6 +295,7 @@ const Home = ({ history }) => {
     setText(null);
     setSelectedDate(null);
     setID(null);
+    setTags([]);
   }
 
   function addModalData(item) {
@@ -303,6 +310,9 @@ const Home = ({ history }) => {
     setText(item.memo);
     setSelectedDate(item.birthday);
     setID(item.id);
+    if (item.tags?.length !== undefined) {
+      setTags(item.tags);
+    }
   }
 
   function getDisplayDate(date) {
@@ -392,8 +402,6 @@ const Home = ({ history }) => {
     return <Guide modal={true} />;
   }
 
-  //console.log("data", JSON.parse(JSON.stringify(data)));
-
   return (
     <IonPage>
       <IonHeader>
@@ -415,7 +423,7 @@ const Home = ({ history }) => {
       </IonHeader>
       <IonContent>
         {/*リストの表示*/}
-        <IonSearchbar
+        {/*<IonSearchbar
           className="search"
           value={searchText}
           showCancelButton="focus"
@@ -427,7 +435,7 @@ const Home = ({ history }) => {
             setSearch(!search);
             searchProfile(e.detail.value, allStorageData);
           }}
-        ></IonSearchbar>
+        ></IonSearchbar>*/}
 
         {birthdayMember.length !== 0 && searchText === "" && (
           <div>
@@ -489,6 +497,7 @@ const Home = ({ history }) => {
 
         {data.length !== 0 ? (
           data.map((item) => {
+            //console.log(item);
             return (
               <IonCard className="card" key={item.id}>
                 <IonCardHeader className="cardHeader">
@@ -537,7 +546,33 @@ const Home = ({ history }) => {
                 </IonCardHeader>
                 　　
                 <IonCardContent className="cardContent">
-                  <div className="memo">{item.memo}</div>
+                  {item.memo !== "" &&
+                    item.memo !== undefined &&
+                    item.memo !== null && (
+                      <div className="memo">{item.memo}</div>
+                    )}
+                  <div>
+                    {item.tags?.length !== 0 && (
+                      <div className="hashtags">
+                        {item.tags?.map((tag) => {
+                          return (
+                            <div key={tag.id}>
+                              <a
+                                className="tag-link"
+                                style={{ color: "#0000ee" }}
+                                href={`/search/${tag.name.slice(
+                                  1,
+                                  tag.name.length
+                                )}`}
+                              >
+                                {tag.name}
+                              </a>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}{" "}
+                  </div>
                 </IonCardContent>
               </IonCard>
             );
@@ -572,6 +607,7 @@ const Home = ({ history }) => {
                 <IonButton
                   onClick={async () => {
                     clearState();
+                    setshowPopover1({ showPopover1: false });
                     setShowModal(false);
                   }}
                 >
@@ -606,17 +642,19 @@ const Home = ({ history }) => {
           </IonHeader>
           <div className="camera">
             <IonAvatar slot="start" className="modal-avatar">
-              <img src={img !== "" ? img : avatar_first} alt="icon" />
-              <label htmlFor="filename" className="cameraIcon">
-                <IonIcon icon={cameraOutline} size="20px" color="favorite" />
-                <input
-                  type="file"
-                  size="16"
-                  id="filename"
-                  src={img}
-                  onChange={addPicture}
-                />
-              </label>
+              <div>
+                <img src={img !== "" ? img : avatar_first} alt="icon" />
+                <label htmlFor="filename" className="cameraIcon">
+                  <IonIcon icon={cameraOutline} size="20px" color="favorite" />
+                  <input
+                    type="file"
+                    size="16"
+                    id="filename"
+                    src={img}
+                    onChange={addPicture}
+                  />
+                </label>
+              </div>
             </IonAvatar>
           </div>
           <IonItem>
@@ -638,13 +676,10 @@ const Home = ({ history }) => {
             ></IonDatetime>
           </IonItem>
           <IonItem>
-            <IonLabel position="floating">タグ</IonLabel>
-            <IonTextarea
-              rows={5}
-              placeholder="例．＃大学　＃先輩"
-              value={text}
-              onIonChange={(e) => setText(e.detail.value)}
-            ></IonTextarea>
+            <IonLabel position="stacked" style={{ fontSize: "1.1rem" }}>
+              タグ
+            </IonLabel>
+            <InputHashtag tags={tags} setTags={setTags} />
           </IonItem>
         </IonModal>
         <IonAlert

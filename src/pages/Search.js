@@ -49,15 +49,23 @@ import {
   updateData2DB,
   uploadImg2Storage,
 } from "../services/api";
+import InputHashtag from "../components/InputHashtag";
+import { useParams } from "react-router";
 
 function getVisited() {
   const v = localStorage.getItem("visited");
   return !!parseInt(v, 10);
 }
 
-const Search = ({ history }) => {
+const Home = ({ history }) => {
+  const { tag } = useParams();
   const [allStorageData, setAllData] = useState([]);
   const [data, setData] = useState([]);
+  function setData_(v) {
+    /*console.log("setData_");
+    console.trace();*/
+    setData(v);
+  }
   const [img, setImg] = useState("");
   const [imgName, setImgName] = useState("");
   const [preImgName, setPreImgName] = useState("");
@@ -81,9 +89,11 @@ const Search = ({ history }) => {
   const [showFileSizeAlert, setShowFileSizeAlert] = useState(false);
   const [search, setSearch] = useState(false);
   const [birthdayMember, setBirthdayMembser] = useState([]);
-  const [showBirthdayList, setShowBirthdayList] = useState(true);
   const [birthdayHeaderList, setBirthdayHeaderList] = useState([]);
   const [showLoading, setShowLoading] = useState(false);
+  const [tags, setTags] = useState([]);
+
+  console.log(JSON.parse(JSON.stringify(tags)));
 
   useIonViewWillEnter(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -108,7 +118,12 @@ const Search = ({ history }) => {
           });
 
           setAllData(sortedData);
-          setData(sortedData);
+          if (tag !== undefined) {
+            setSearchText(tag);
+            searchProfile(tag, sortedData);
+          } else {
+            setData_(sortedData);
+          }
           whoIsBirthdayMember(sortedData);
         });
     });
@@ -241,6 +256,7 @@ const Search = ({ history }) => {
       name: name,
       birthday: selectedDate,
       memo: text,
+      tags: tags,
       created: getDate(),
       id: new Date().getTime().toString(),
       icon_path: await uploadImg(true),
@@ -284,6 +300,7 @@ const Search = ({ history }) => {
     setText(null);
     setSelectedDate(null);
     setID(null);
+    setTags([]);
   }
 
   function addModalData(item) {
@@ -342,10 +359,13 @@ const Search = ({ history }) => {
     clearState();
   }
 
-  function findWord(item, word) {
+  function findWord(item, word, tags) {
     const re = /\s+/g;
     const words = word.split(re);
     let cnt = 0;
+    let tagCnt = 0;
+    console.log(item, word, tags);
+
     for (const w of words) {
       if (item) {
         const find = item.indexOf(`${w}`);
@@ -353,34 +373,54 @@ const Search = ({ history }) => {
           cnt += 1;
         }
       }
+
+      if (tags !== undefined) {
+        for (const t of tags) {
+          if (w === t.name.slice(1, t.name.length)) {
+            tagCnt += 1;
+          }
+        }
+      }
     }
-    if (cnt === words.length) {
+
+    if (cnt === words.length || tagCnt === words.length) {
+      console.log(true, tags);
       return 1;
     }
+
     return 0;
   }
 
-  async function SearchData(search, word) {
-    if (!search || word === "" || word === undefined) {
+  async function canselSearch() {
+    setSearch(!search);
+    setData_(allStorageData);
+  }
+
+  async function searchProfile(word, profiles) {
+    if (word === "" || word === undefined) {
       setSearch(!search);
-      setData(allStorageData);
+      setData_(profiles);
       return;
     }
 
-    const newData = allStorageData.filter((item) =>
-      findWord(item.memo + " " + item.name, word)
+    const newData = profiles.filter((item) =>
+      findWord(item.memo + " " + item.name, word, item.tags)
     );
 
+    console.log(newData);
+
     if (newData.length > 0) {
-      setData(newData);
+      setData_(newData);
       return;
     }
-    setData([]);
+    setData_([]);
   }
 
   if (!firstLogined) {
     return <Guide modal={true} />;
   }
+
+  //console.log("data", JSON.parse(JSON.stringify(data)));
 
   return (
     <IonPage>
@@ -402,23 +442,23 @@ const Search = ({ history }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {/*リストの表示*/}
         <IonSearchbar
           className="search"
           value={searchText}
           showCancelButton="focus"
           placeholder="検索"
           cancelButtonText="キャンセル"
-          onIonCancel={() => SearchData(false)}
+          onIonCancel={() => canselSearch()}
           onIonChange={(e) => {
             setSearchText(e.target.value);
             setSearch(!search);
-            SearchData(true, e.detail.value);
+            searchProfile(e.detail.value, allStorageData);
           }}
         ></IonSearchbar>
 
         {data.length !== 0 ? (
           data.map((item) => {
+            //console.log(item);
             return (
               <IonCard className="card" key={item.id}>
                 <IonCardHeader className="cardHeader">
@@ -450,6 +490,7 @@ const Search = ({ history }) => {
                     color="dark"
                     onClick={(e) => {
                       e.persist();
+                      setID(item.id);
                       setshowPopover1({
                         showPopover1: true,
                         event: e,
@@ -466,7 +507,33 @@ const Search = ({ history }) => {
                 </IonCardHeader>
                 　　
                 <IonCardContent className="cardContent">
-                  <div className="memo">{item.memo}</div>
+                  {item.memo !== "" &&
+                    item.memo !== undefined &&
+                    item.memo !== null && (
+                      <div className="memo">{item.memo}</div>
+                    )}
+                  <div>
+                    {item.tags?.length !== 0 && (
+                      <div className="hashtags">
+                        {item.tags?.map((tag) => {
+                          return (
+                            <div key={tag.id}>
+                              <a
+                                className="tag-link"
+                                style={{ color: "#0000ee" }}
+                                href={`/search/${tag.name.slice(
+                                  1,
+                                  tag.name.length
+                                )}`}
+                              >
+                                {tag.name}
+                              </a>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}{" "}
+                  </div>
                 </IonCardContent>
               </IonCard>
             );
@@ -484,8 +551,8 @@ const Search = ({ history }) => {
                 <IonButton
                   onClick={async () => {
                     clearState();
+                    setshowPopover1({ showPopover1: false });
                     setShowModal(false);
-                    setshowPopover1({ showPopover1: false, event: undefined });
                   }}
                 >
                   戻る
@@ -504,7 +571,7 @@ const Search = ({ history }) => {
                     const sortedData = [...data].sort((a, b) => {
                       return b.created - a.created;
                     });
-                    setData(sortedData);
+                    setData_(sortedData);
                     setAllData(sortedData);
                     whoIsBirthdayMember(sortedData);
                     //setShowLoading(false);
@@ -518,18 +585,20 @@ const Search = ({ history }) => {
             </IonToolbar>
           </IonHeader>
           <div className="camera">
-            <IonAvatar slot="start">
-              <img src={img !== "" ? img : avatar_first} alt="icon" />
-              <label htmlFor="filename" className="cameraIcon">
-                <IonIcon icon={cameraOutline} size="20px" />
-                <input
-                  type="file"
-                  size="16"
-                  id="filename"
-                  src={img}
-                  onChange={addPicture}
-                />
-              </label>
+            <IonAvatar slot="start" className="modal-avatar">
+              <div>
+                <img src={img !== "" ? img : avatar_first} alt="icon" />
+                <label htmlFor="filename" className="cameraIcon">
+                  <IonIcon icon={cameraOutline} size="20px" color="favorite" />
+                  <input
+                    type="file"
+                    size="16"
+                    id="filename"
+                    src={img}
+                    onChange={addPicture}
+                  />
+                </label>
+              </div>
             </IonAvatar>
           </div>
           <IonItem>
@@ -551,15 +620,13 @@ const Search = ({ history }) => {
             ></IonDatetime>
           </IonItem>
           <IonItem>
-            <IonLabel position="floating">タグ</IonLabel>
-            <IonTextarea
-              rows={5}
-              placeholder="例．＃大学　＃先輩"
-              value={text}
-              onIonChange={(e) => setText(e.detail.value)}
-            ></IonTextarea>
+            <IonLabel position="stacked" style={{ fontSize: "1.1rem" }}>
+              タグ
+            </IonLabel>
+            <InputHashtag tags={tags} setTags={setTags} />
           </IonItem>
         </IonModal>
+
         <IonAlert
           isOpen={showFileSizeAlert}
           onDidDismiss={() => setShowFileSizeAlert(false)}
@@ -617,16 +684,16 @@ const Search = ({ history }) => {
               {
                 text: "削除",
                 handler: async () => {
-                  setshowPopover1({ showPopover1: false, event: undefined });
                   await deleteProfile();
                   const data = await getAllData(userId);
-                  const sortedData = [...data].sort((a, b) => {
+
+                  const profiles = [...data].sort((a, b) => {
                     return b.created - a.created;
                   });
-                  setData(sortedData);
-                  setAllData(sortedData);
-                  whoIsBirthdayMember(sortedData);
-                  SearchData(true, searchText);
+                  setAllData(profiles);
+                  whoIsBirthdayMember(profiles);
+                  searchProfile(searchText, profiles);
+                  setshowPopover1({ showPopover1: false, event: undefined });
                 },
               },
             ]}
@@ -660,4 +727,4 @@ const Search = ({ history }) => {
   );
 };
 
-export default Search;
+export default Home;

@@ -81,12 +81,41 @@ ion-button.edit-button {
   /*   background-color: #1c3786; */
 }
 
+.hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #f1f1f1;
+  color: black;
+  line-height: 20px;
+  font-size: 15px;
+  padding: 10px;
+}
+
+a {
+  color: #0000ee;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0000ee;
+  text-decoration: underline;
+}
+
+a:visited {
+  color: #551a8b;
+  text-decoration: underline;
+}
+
 .my-custom-class .modal-wrapper .ion-page {
   display: inline;
 }
 
 .modal-avatar {
   position: relative;
+}
+ion-avatar.avatar-ionic.md.hydrated {
+  height: 100%;
+  width: 100%;
 }
 
 .camera {
@@ -97,8 +126,8 @@ ion-button.edit-button {
 
 .cameraIcon {
   position: absolute;
-  width: 48px;
-  height: 48px;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -120,8 +149,9 @@ ion-button.edit-button {
   text-align: center;
 }
 
-ion-content {
-  /*--background: "#000000";*/
+.tag-group {
+  display: flex;
+  flex-direction: column;
 }
 
 .ion-color-favorite {
