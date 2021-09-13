@@ -671,8 +671,10 @@ const Home = ({ history }) => {
             <IonDatetime
               displayFormat="YYYY/MM/DD"
               min="1900-01-01"
-              max="2020-12-31"
+              doneText="OK"
+              cancelText="キャンセル"
               value={selectedDate}
+              // defaultValue={selectedDate}
               onIonChange={(e) => setSelectedDate(e.detail.value)}
             ></IonDatetime>
           </IonItem>
