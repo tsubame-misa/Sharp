@@ -4,8 +4,7 @@ import "./InputHashtag.css";
 import { closeOutline } from "ionicons/icons";
 
 const InputHashtag = ({ tags, setTags }) => {
-  //const [tags, setTags] = useState([]);
-  const [hashtag, setHashTag] = useState("#大学");
+  const [hashtag, setHashTag] = useState("大学");
   const [focused, setFocused] = useState(false);
 
   function addHashTag() {
@@ -15,12 +14,12 @@ const InputHashtag = ({ tags, setTags }) => {
 
     const newPrograms = Array.from(tags);
     newPrograms.push({
-      name: hashtag,
+      name: "#" + hashtag,
       id: new Date().getTime().toString(),
     });
     setTags(newPrograms);
     setFocused(false);
-    setHashTag("#大学");
+    setHashTag("大学");
   }
 
   function deleteTag(id) {
@@ -43,28 +42,21 @@ const InputHashtag = ({ tags, setTags }) => {
             </div>
           );
         })}
-
         <div className="text-input-group">
+          <span className="hashtag-char">#</span>
           <input
             className="textlines"
             value={hashtag}
             onChange={(e) => {
               setFocused(true);
-              if (e.target.value[0] === "#") {
-                setHashTag(e.target.value);
-              } else {
-                setHashTag("#" + e.target.value);
-              }
+              setHashTag(e.target.value);
             }}
-            /*onBlur={() => {
-              addHashTag();
-            }}*/
-            onFocus={() => setHashTag("#")}
+            onFocus={() => setHashTag("")}
           />
+
           <div className="ok-button">
             <button
               onClick={() => {
-                console.log("onClick");
                 addHashTag();
               }}
             >
