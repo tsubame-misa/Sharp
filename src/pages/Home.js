@@ -69,7 +69,8 @@ const Home = ({ history }) => {
   const [preImgName, setPreImgName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState('2000-01-01T13:47:20.789');
+  const [dataChanged, setDataChanged] = useState(false)
   const [name, setName] = useState(null);
   const [text, setText] = useState(null);
   const [ID, setID] = useState(null);
@@ -248,7 +249,7 @@ const Home = ({ history }) => {
   async function saveData() {
     const newData = {
       name: name,
-      birthday: selectedDate,
+      birthday:dataChanged? selectedDate:null,
       // memo: text,
       tags: tags,
       created: getDate(),
@@ -266,7 +267,7 @@ const Home = ({ history }) => {
     const path = await uploadImg(false);
     const newData = {
       name: name,
-      birthday: selectedDate,
+      birthday:dataChanged? selectedDate:null,
       // memo: text,
       tags: tags,
       created: getDate(),
@@ -668,12 +669,14 @@ const Home = ({ history }) => {
           </IonItem>
           <IonItem>
             <IonLabel position="floating">誕生日</IonLabel>
-            <IonDatetime
+            <IonDatetime              
               displayFormat="YYYY/MM/DD"
               min="1900-01-01"
-              max="2020-12-31"
-              value={selectedDate}
-              onIonChange={(e) => setSelectedDate(e.detail.value)}
+              doneText="OK"
+              cancelText="キャンセル"
+             /* value={selectedDate}*/
+             defaultValue={selectedDate}
+              onIonChange={(e) => {setDataChanged(true); setSelectedDate(e.detail.value)}}
             ></IonDatetime>
           </IonItem>
           <IonItem>
