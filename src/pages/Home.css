@@ -128,6 +128,8 @@ ion-avatar.avatar-ionic.md.hydrated {
 .tag-wrapper {
   color: #4c8dff;
   background-color: #f1f1f1;
+  display: flex;
+  align-items: center;
 }
 
 .tag-wrapper a {
@@ -205,6 +207,7 @@ ion-avatar.avatar-ionic.md.hydrated {
 
 .birthday {
   padding-left: 3px;
+  min-width: 100px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -221,6 +224,8 @@ ion-avatar.avatar-ionic.md.hydrated {
   .tag-wrapper {
     color: #47c5ff;
     background-color: #494949;
+    display: flex;
+    align-items: center;
   }
 
   .tag-wrapper a {
