@@ -567,12 +567,23 @@ const Home = ({ history }) => {
                       {item.tags?.map((tag) => {
                         return (
                           <div key={tag.id} className="tag-wrapper">
-                            <a
+                            {/*} <a
                               className="tag-link"
                               href={`/search?q=${tag.name.split("#")[1]}`}
                             >
                               {tag.name}
-                            </a>
+                        </a>*/}
+                            <div
+                              className="tag-link"
+                              onClick={() =>
+                                history.replace(
+                                  `/search?q=${tag.name.split("#")[1]}`
+                                )
+                              }
+                              // href={`/search?q=${tag.name.split("#")[1]}`}
+                            >
+                              {tag.name}
+                            </div>
                             &ensp;
                           </div>
                         );

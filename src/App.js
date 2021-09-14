@@ -16,6 +16,7 @@ import Guide from "./pages/Guide";
 import Search from "./pages/Search";
 import { searchOutline, peopleOutline } from "ionicons/icons";
 import React from "react";
+//import TabScreen from "./pages/TabScreen";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -47,43 +48,96 @@ const App = () => {
     });
   }, []);
 
-  return (
+  /*return (
     <IonApp>
       <IonReactRouter>
-        <IonTabs>
-          <IonRouterOutlet>
-            <Route
-              exact
-              path="/home"
-              render={(props) => {
-                return isSignedIn ? <Home {...props} /> : <Login />;
-              }}
-            />
-            <Route exact path="/">
-              <Redirect to="/home" />
-            </Route>
-            {/*よくない？*/}
-            <Route path="/search" component={Search} />
-            <Route path="/search-blank" component={Search} exact />
-            {/* <Route path="/search/:tag" component={Search} /> */}
-
-            <Route exact path="/setting/Guide" component={Guide} />
-          </IonRouterOutlet>
-
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="home" href="/home">
-              <IonIcon icon={peopleOutline} />
-              <IonLabel>プロフィール</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="search" href="/search-blank">
-              <IonIcon icon={searchOutline} />
-              <IonLabel>検索</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
+        <Route
+          exact
+          path="/home"
+          render={(props) => {
+            return isSignedIn ? <TabScreen {...props} /> : <Login />;
+          }}
+        />
       </IonReactRouter>
     </IonApp>
   );
 };
+export default App;*/
 
+  return (
+    <IonApp>
+      <IonReactRouter>
+        {isSignedIn ? (
+          <IonTabs>
+            <IonRouterOutlet>
+              <Route exact path="/home" component={Home} />
+              <Route exact path="/">
+                <Redirect to="/home" />
+              </Route>
+              {/*よくない？*/}
+
+              <Route path="/search" component={Search} />
+              <Route path="/search-blank" component={Search} exact />
+              <Route exact path="/setting/Guide" component={Guide} />
+            </IonRouterOutlet>
+
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="home" href="/home">
+                <IonIcon icon={peopleOutline} />
+                <IonLabel>プロフィール</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="search" href="/search-blank">
+                <IonIcon icon={searchOutline} />
+                <IonLabel>検索</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+        ) : (
+          <Login />
+        )}
+      </IonReactRouter>
+    </IonApp>
+  );
+
+  return (
+    <IonApp>
+      <IonReactRouter>
+        {isSignedIn ? (
+          <IonTabs>
+            <IonRouterOutlet>
+              <Route
+                exact
+                path="/home"
+                /*render={(props) => {
+                return isSignedIn ? <Home {...props} /> : <Login />;
+              }}*/
+              />
+              <Route exact path="/">
+                <Redirect to="/home" />
+              </Route>
+
+              <Route path="/search" component={Search} />
+              <Route path="/search-blank" component={Search} exact />
+
+              <Route exact path="/setting/Guide" component={Guide} />
+            </IonRouterOutlet>
+
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="home" href="/home">
+                <IonIcon icon={peopleOutline} />
+                <IonLabel>プロフィール</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="search" href="/search-blank">
+                <IonIcon icon={searchOutline} />
+                <IonLabel>検索</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+        ) : (
+          <Login />
+        )}
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 export default App;

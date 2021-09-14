@@ -133,6 +133,17 @@ const Search = ({ history }) => {
   });
 
   useEffect(() => {
+    console.log("here", tag);
+    if (tag) {
+      setSearchText(tag);
+      searchProfile(tag, allStorageData);
+    } else {
+      setSearchText("");
+      setData_([]);
+    }
+  }, [tag, allStorageData]);
+
+  useEffect(() => {
     window.addEventListener("storage", () => {
       setFirstLogined(getVisited());
     });
@@ -527,13 +538,24 @@ const Search = ({ history }) => {
                         {item.tags?.map((tag) => {
                           return (
                             <div key={tag.id} className="tag-wrapper">
-                              <a
+                              {/*<a
                                 className="tag-link"
-                                /*style={{ color: "#0000ee" }}*/
+                               
                                 href={`/search?q=${tag.name.split("#")[1]}`}
                               >
                                 {tag.name}
-                              </a>
+                              </a>*/}
+                              <div
+                                className="tag-link"
+                                onClick={
+                                  () => setSearchText(tag.name.split("#")[1])
+                                  /* history.replace(
+                                    `/search?q=${tag.name.split("#")[1]}`
+                                  )*/
+                                }
+                              >
+                                {tag.name}
+                              </div>
                               &ensp;
                             </div>
                           );
